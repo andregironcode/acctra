@@ -62,8 +62,8 @@ class User < ApplicationRecord
   validates :license, attached: true, 
               content_type: { in: ['application/pdf'], message: 'must be a PDF' },
               size: { less_than: 5.megabytes, message: 'must be less than 5MB' }
-  validates :profile_image, attached: true, 
-              content_type: { in: ['image/png', 'image/jpeg', 'image/jpg'], message: 'must be a PNG, JPG, or JPEG' },
+  validates :profile_image, attached: true,
+              content_type: { in: ['image/png', 'image/jpeg'], message: 'must be a PNG or JPEG' },
               size: { less_than: 10.megabytes, message: 'must be less than 10MB' },
               if: -> { profile_image.attached? }
             
