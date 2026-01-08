@@ -79,6 +79,7 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'pry', groups: [:development, :test]
 
 gem 'rails_12factor', group: :production
+gem 'mini_racer', platforms: :ruby  # JavaScript runtime for asset precompilation
 
 gem 'active_storage_validations'
 gem 'arctic_admin'
