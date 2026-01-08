@@ -95,7 +95,6 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  # Allow Railway hosts and custom domains
-  config.hosts << /.*\.up\.railway\.app/
-  config.hosts << /.*\.railway\.app/ if ENV['RAILWAY_ENVIRONMENT']
+  # Allow all hosts in Railway environment (Railway uses dynamic hosts)
+  config.hosts.clear if ENV['RAILWAY_ENVIRONMENT'].present?
 end
