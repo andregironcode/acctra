@@ -97,4 +97,5 @@ Rails.application.configure do
 
   # Disable host authorization for cloud platforms (Railway handles security at their level)
   config.hosts.clear
+  config.host_authorization = { exclude: ->(request) { true } }
 end
