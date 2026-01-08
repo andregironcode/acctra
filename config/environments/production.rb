@@ -95,6 +95,6 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  # Allow all hosts in Railway environment (Railway uses dynamic hosts)
-  config.hosts.clear if ENV['RAILWAY_ENVIRONMENT'].present?
+  # Disable host authorization for cloud platforms (Railway handles security at their level)
+  config.hosts.clear
 end
