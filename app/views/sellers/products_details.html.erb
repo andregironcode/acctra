@@ -1,0 +1,30 @@
+   <%= link_to 'Go Back', request.referer || root_path, class: "btn setBtnStats p-2 px-3" %>
+
+<div class="shadow my-4 productTableRadius">
+    <div class="table-responsive">
+        <table class="table productTable text-center" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th class="pl-3">SKU</th>
+                    <th class="pl-3">IMEI</th>                   
+                </tr>
+            </thead>
+            <tbody>
+                <% if @order_details.present? %>
+                <% @order_details.each do |detail| %>
+                <tr>
+                    <td class="py-4"><%= detail.sku %></td>
+                    <td class="py-4"><%= detail.imei %></td>
+                </tr>
+                <% end %>
+                <% else %>
+                <tr>
+                    <td colspan="7" class="py-4">No details found</td>
+                </tr>
+                <% end %>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

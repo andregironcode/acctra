@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Counter Offer</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+    .container { background: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+    .header { font-size: 20px; color: #333; text-align: center; font-weight: bold; }
+    .details { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+    .button { display: inline-block; padding: 10px 15px; background: #630CDB; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="header">⚡ New Counter Offer Received – Review It Now!</p>
+
+    <p>The Seller has made a counteroffer on:</p>
+
+    <div class="details">
+      <p>🛍 <strong>Product:</strong> <%= @product_name %></p>
+      <p>💰 <strong>Your Bid:</strong> $<%= @amount %></p>
+      <p>📦 <strong>Quantity:</strong> <%= @quantity %></p>
+    </div>
+
+
+    <p style="text-align: center; color: #ffffff;">
+      <a href="<%= @url %>" class="button" style="color: #fff">💬 View Counter Offer</a>
+    </p>
+
+  </div>
+</body>
+</html>

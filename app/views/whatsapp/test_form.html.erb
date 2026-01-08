@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhatsApp Testing - Acctra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    button {
+      background-color: #25d366;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #128c7e;
+    }
+    .btn-secondary {
+      background-color: #34495e;
+    }
+    .btn-secondary:hover {
+      background-color: #2c3e50;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      background-color: #e2e8f0;
+      color: #2d3748;
+      border: 1px solid #cbd5e0;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #25d366;
+      text-align: center;
+    }
+    .endpoint-info {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 30px;
+      border-left: 4px solid #25d366;
+    }
+    code {
+      background-color: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+    .test-options {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .test-link {
+      display: inline-block;
+      background-color: #25D366;
+      color: white;
+      padding: 15px 30px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+    .test-link:hover {
+      background-color: #20BA5A;
+      color: white;
+    }
+    .section {
+      margin-top: 40px;
+    }
+    .section h2 {
+      color: #34495e;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .form-control {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn-template {
+      background-color: #9b59b6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn-template:hover {
+      background-color: #8e44ad;
+    }
+    .btn-order {
+      background-color: #e67e22;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn-order:hover {
+      background-color: #d35400;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>📱 WhatsApp Testing Interface</h1>
+    
+    <div class="info">
+      <strong>📋 Configuration Status:</strong><br>
+      • Twilio Account SID: <%= ENV['TWILIO_ACCOUNT_SID'] ? '✅ Configured' : '❌ Missing' %><br>
+      • Twilio Auth Token: <%= ENV['TWILIO_AUTH_TOKEN'] ? '✅ Configured' : '❌ Missing' %><br>
+      • WhatsApp Number: <%= ENV['TWILIO_WHATSAPP_NUMBER'] || '❌ Not configured' %>
+    </div>
+
+    <div class="test-options">
+      <a href="/whatsapp/test_bid_notification" class="test-link">
+        🔔 Test Bid Notifications
+      </a>
+      <a href="#order-template-section" class="test-link">
+        📦 Test Order Notifications
+      </a>
+    </div>
+
+    <form id="whatsappForm">
+      <div class="form-group">
+        <label for="phone">📞 Recipient Phone Number (with country code):</label>
+        <input type="tel" id="phone" name="to" placeholder="+1234567890" required>
+        <small>Format: +1234567890 (include country code)</small>
+      </div>
+
+      <div class="form-group">
+        <label for="message">💬 Message:</label>
+        <textarea id="message" name="message" placeholder="Enter your test message here...">Hello from Acctra! This is a test message from our WhatsApp integration. 🚀</textarea>
+      </div>
+
+      <button type="submit">📤 Send WhatsApp Message</button>
+      <button type="button" onclick="sendOrderNotification()" class="btn-secondary">📦 Test Order Notification</button>
+      <button type="button" onclick="testKenyanNumber()" class="btn-secondary">🇰🇪 Test Kenyan Number</button>
+    </form>
+
+    <div id="result" class="result"></div>
+
+    <div class="endpoint-info">
+      <h3>🔗 API Endpoints for Integration:</h3>
+      <p><strong>Send Test Message:</strong></p>
+      <code>POST /whatsapp/test_message</code><br>
+      Parameters: <code>to</code> (phone number), <code>message</code> (text)<br><br>
+      
+      <p><strong>Send Order Notification:</strong></p>
+      <code>POST /whatsapp/send_order_notification</code><br>
+      Parameters: <code>order_id</code>, <code>phone_number</code><br><br>
+      
+      <p><strong>cURL Example:</strong></p>
+      <code>curl -X POST http://localhost:3000/whatsapp/test_message -d "to=+1234567890&message=Hello World"</code>
+    </div>        <div class="section" id="order-template-section">
+      <h2>🔔 Test Bid Template Message</h2>
+      <%= form_with url: whatsapp_test_bid_template_path, method: :post, local: true do |f| %>
+        <div class="form-group">
+          <label for="phone_number">Phone Number:</label>
+          <%= f.text_field :phone_number, placeholder: "+254719459405", class: "form-control", required: true %>
+        </div>
+        
+        <div class="form-group">
+          <label for="product_name">Product Name:</label>
+          <%= f.text_field :product_name, value: "iPhone 14 Pro - 256GB", class: "form-control" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="amount">Bid Amount:</label>
+          <%= f.number_field :amount, value: 1500, min: 1, class: "form-control" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <%= f.number_field :quantity, value: 1, min: 1, class: "form-control" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="time">Offer Valid:</label>
+          <%= f.text_field :time, value: "24 hours", class: "form-control" %>
+        </div>
+        
+        <button type="submit" class="btn btn-template">📋 Test Bid Template</button>
+      <% end %>
+    </div>
+
+    <div class="section" id="order-template-section">
+      <h2>📦 Test Order Template Message</h2>
+      <%= form_with url: whatsapp_test_order_template_path, method: :post, local: true do |f| %>
+        <div class="form-group">
+          <label for="phone_number">Phone Number:</label>
+          <%= f.text_field :phone_number, placeholder: "+254719459405", class: "form-control", required: true %>
+        </div>
+        
+        <div class="form-group">
+          <label for="order_amount">Order Amount ($):</label>
+          <%= f.number_field :order_amount, value: 2500, min: 1, class: "form-control" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="total_items">Total Items:</label>
+          <%= f.number_field :total_items, value: 3, min: 1, class: "form-control" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="time">Time:</label>
+          <%= f.text_field :time, value: Time.current.strftime("%H:%M"), class: "form-control" %>
+        </div>
+        
+        <button type="submit" class="btn btn-order">📋 Test Order Template</button>
+      <% end %>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('whatsappForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const resultDiv = document.getElementById('result');
+      
+      // Show loading state
+      resultDiv.className = 'result';
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '⏳ Sending message...';
+      
+      fetch('/whatsapp/test_message', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+            <strong>✅ Success!</strong><br>
+            ${data.message}<br>
+            <strong>Message SID:</strong> ${data.message_sid}<br>
+            <strong>To:</strong> ${data.to}<br>
+            <strong>Status:</strong> ${data.status}
+          `;
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `
+            <strong>❌ Error:</strong> ${data.error}<br>
+            <strong>Message:</strong> ${data.message}
+            ${data.code ? `<br><strong>Code:</strong> ${data.code}` : ''}
+          `;
+        }
+      })
+      .catch(error => {
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = `<strong>❌ Network Error:</strong> ${error.message}`;
+      });
+    });
+
+    function sendOrderNotification() {
+      const phone = document.getElementById('phone').value;
+      if (!phone) {
+        alert('Please enter a phone number first');
+        return;
+      }
+      
+      const resultDiv = document.getElementById('result');
+      resultDiv.className = 'result';
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '⏳ Sending order notification...';
+      
+      const formData = new FormData();
+      formData.append('order_id', '12345');
+      formData.append('phone_number', phone);
+      
+      fetch('/whatsapp/send_order_notification', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+            <strong>✅ Order Notification Sent!</strong><br>
+            ${data.message}<br>
+            <strong>Order ID:</strong> ${data.order_id}<br>
+            <strong>Message SID:</strong> ${data.message_sid}
+          `;
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `<strong>❌ Error:</strong> ${data.error}`;
+        }
+      })
+      .catch(error => {
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = `<strong>❌ Network Error:</strong> ${error.message}`;
+      });
+    }
+
+    function testKenyanNumber() {
+      const resultDiv = document.getElementById('result');
+      resultDiv.className = 'result';
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '⏳ Testing Kenyan number +254719459405...';
+      
+      const formData = new FormData();
+      formData.append('to', '+254719459405');
+      formData.append('message', 'Hello from Acctra! 🇰🇪\\n\\nThis is a test message to your Kenyan number.\\n\\nYour WhatsApp integration is working! 🚀📱');
+      
+      fetch('/whatsapp/test_message', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      })
+      .then(response => response.json())
+      .then data => {
+        if (data.success) {
+          resultDiv.className = 'result success';
+          resultDiv.innerHTML = `
+            <strong>✅ Success! Message sent to +254719459405</strong><br>
+            ${data.message}<br>
+            <strong>Message SID:</strong> ${data.message_sid}<br>
+            <strong>Status:</strong> ${data.status}<br>
+            <strong>🇰🇪 Check your WhatsApp for the test message!</strong>
+          `;
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.innerHTML = `
+            <strong>❌ Error:</strong> ${data.error}<br>
+            <strong>Message:</strong> ${data.message}
+            ${data.code ? `<br><strong>Code:</strong> ${data.code}` : ''}
+          `;
+        }
+      })
+      .catch(error => {
+        resultDiv.className = 'result error';
+        resultDiv.innerHTML = `<strong>❌ Network Error:</strong> ${error.message}`;
+      });
+    }
+  </script>
+</body>
+</html>

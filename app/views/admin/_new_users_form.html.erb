@@ -1,0 +1,280 @@
+<div class="container">
+    <% country_codes = [
+        { name: "United Arab Emirates", dial_code: "+971" },
+        { name: "United States", dial_code: "+1" },
+        { name: "United Kingdom", dial_code: "+44" },
+        { name: "Germany", dial_code: "+49" },
+        { name: "France", dial_code: "+33" },
+        { name: "Italy", dial_code: "+39" },
+        { name: "Spain", dial_code: "+34" },
+        { name: "Netherlands", dial_code: "+31" },
+        { name: "Belgium", dial_code: "+32" },
+        { name: "Switzerland", dial_code: "+41" },
+        { name: "Austria", dial_code: "+43" },
+        { name: "Canada", dial_code: "+1" },
+        { name: "Australia", dial_code: "+61" },
+        { name: "Japan", dial_code: "+81" },
+        { name: "China", dial_code: "+86" },
+        { name: "India", dial_code: "+91" },
+        { name: "Brazil", dial_code: "+55" },
+        { name: "Mexico", dial_code: "+52" },
+        { name: "Saudi Arabia", dial_code: "+966" },
+        { name: "Turkey", dial_code: "+90" }
+    ] %>
+    <%= form_tag(@user.persisted? ? admin_user_path(@user) : '/admin/users', 
+               method: @user.persisted? ? :put : :post, 
+               class: 'formtastic product', 
+               novalidate: true,
+               multipart: true) do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+    <h1><%= @user.persisted? ? "Edit User" : "New User" %></h1>
+    <fieldset class="form-group">
+
+        <!-- Display general form errors -->
+        <% if @user.errors.any? %>
+        <div class="alert alert-danger">
+            <ul>
+                <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+
+        <!-- First Row: First Name and Last Name -->
+        <div class="form-row mt-4">
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[first_name]', class: 'control-label' do %>
+                First Name <span class="text-danger">*</span>
+                <% end %>
+                <%= text_field_tag 'user[first_name]', @user.first_name, class: 'form-control', required: true %>
+                <% if @user.errors[:first_name].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:first_name].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[last_name]', class: 'control-label' do %>
+                Last Name <span class="text-danger">*</span>
+                <% end %>
+                <%= text_field_tag 'user[last_name]', @user.last_name, class: 'form-control', required: true %>
+                <% if @user.errors[:last_name].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:last_name].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+
+        <!-- Second Row: Email and Password -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[email]', class: 'control-label' do %>
+                Email <span class="text-danger">*</span>
+                <% end %> <%= email_field_tag 'user[email]', @user.email, class: 'form-control', required: true %>
+                <% if @user.errors[:email].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:email].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[password]', class: 'control-label' do %>
+                Password <span class="text-danger">*</span>
+                <% end %>
+                <%= password_field_tag 'user[password]', nil, class: 'form-control' %>
+                <% if @user.errors[:password].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:password].join(', ') %>
+                </div>
+                <% end %>
+                <% if @user.email.present? %>
+                <small class="text-muted"><i>Leave blank if you do not want to change your password</i></small>
+                <% end %>
+
+
+            </div>
+        </div>
+
+        <!-- Third Row: Password Confirmation and Contact Info -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[password_confirmation]', class: 'control-label' do %>
+                Password Confirmation <span class="text-danger">*</span>
+                <% end %>
+
+                <%= password_field_tag 'user[password_confirmation]', nil, class: 'form-control' %>
+                <% if @user.errors[:password_confirmation].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:password_confirmation].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+
+            <div class="form-group col-md-3">
+                <%= label_tag 'user[country_code]', class: 'control-label' do %>
+                Country Code <span class="text-danger">*</span>
+                <% end %>
+                <%= select_tag 'user[country_code]',
+                    options_for_select(
+                    country_codes.map { |c| ["#{c[:name]} (#{c[:dial_code]})", c[:dial_code]] },
+                    selected: @user.country_code),class: 'form-control', id: 'country-code' %>
+            </div>
+
+            <div class="form-group col-md-3">
+                <%= label_tag 'user[phone_number]', class: 'control-label' do %>
+                Phone Number <span class="text-danger">*</span>
+                <% end %>
+                <%= text_field_tag 'user[phone_number]', @user.phone_number, class: 'form-control', id: 'phone-number' %>
+            </div>
+        </div>
+
+        <!-- Fourth Row: Company Name and Website -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[company_name]', "Company Name", class: 'control-label' %>
+                <%= text_field_tag 'user[company_name]', @user.company_name, class: 'form-control' %>
+                <% if @user.errors[:company_name].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:company_name].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[website]', class: 'control-label' do %>
+                Website <span class="text-danger">*</span>
+                <% end %>
+                <%= text_field_tag 'user[website]', @user.website, class: 'form-control' %>
+                <% if @user.errors[:website].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:website].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+
+        <!-- Fifth Row: License Number and Address -->
+        <div class="form-row">
+
+
+            <div class="form-group col-md-12">
+                <%= label_tag 'user[address]', "Address", class: 'control-label' %>
+                <%= text_area_tag 'user[address]', @user.address, rows: 0, class: 'form-control' %>
+                <% if @user.errors[:address].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:address].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <div class="form-group">
+                    <%= label_tag 'user[role]', "Role", class: 'control-label' %>
+                    <%= select_tag 'user[role]', options_for_select([['Seller', 'seller'], ['Buyer', 'buyer']], @user.role), class: 'form-control' %>
+                    <% if @user.errors[:role].any? %>
+                    <div class="text-danger">
+                        <%= @user.errors[:role].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[license]', class: 'control-label' do %>
+                License File (PDF only) <span class="text-danger">*</span>
+                <% end %>
+                <%= file_field_tag 'user[license]', accept: 'application/pdf', class: 'form-control' %>
+                <% if @user.license.attached? %>
+                    <small class="text-muted"><i>Current License: <%= @user.license.filename %></i></small>
+                    <div class="mt-2">
+                        <%= link_to "View License", url_for(@user.license), target: "_blank", class: "btn btn-sm btn-outline-primary" %>
+                    </div>
+                <% else %>
+                    <small class="text-muted"><i>No license uploaded</i></small>
+                <% end %>
+                <% if @user.errors[:license].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:license].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+        <div class="form-row">
+
+            <div class="form-group col-md-6">
+                <%= label_tag 'user[profile_image]', class: 'control-label' do %>
+                Logo <span class="text-danger">*</span>
+                <% end %>
+                <%= file_field_tag 'user[profile_image]',  id: "imageInputAdmin", accept: "image/png, image/jpeg, image/jpg", class: 'form-control' %>
+                <small class="text-muted"><i>Logo must be a valid image file (PNG, JPG, or JPEG). Any size accepted.</i></small>
+                <% if @user.profile_image.attached? %>
+                    <div class="mt-2">
+                        <small class="text-muted"><i>Current Logo: <%= @user.profile_image.filename %></i></small>
+                        <div class="mt-1">
+                            <%= link_to "View Logo", url_for(@user.profile_image), target: "_blank", class: "btn btn-sm btn-outline-primary" %>
+                        </div>
+                    </div>
+                <% else %>
+                    <br><small class="text-muted"><i>No logo uploaded</i></small>
+                <% end %>
+
+                <% if @user.errors[:profile_image].any? %>
+                <div class="text-danger">
+                    <%= @user.errors[:profile_image].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-2 d-flex">
+                <%= submit_tag @user.persisted? ? 'Update User' : 'Create User', class: 'btn btn-primary py-2 mr-2' %>
+                <%= link_to 'Cancel', '/admin/users', class: 'btn btn-secondary' %>
+            </div>
+        </div>
+
+    </fieldset>
+</div>
+<% end %>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const maxSizeInMB = 10; // Increased from 5MB to 10MB
+        
+        $('#imageInputAdmin').on('change', function() {
+            const file = this.files[0];
+            const $message = $('#message');
+            const $submitButton = $('#submitButton');
+            const $imageInput = $('#imageInputAdmin');
+
+            if (file) {
+                if (file.size > maxSizeInMB * 1024 * 1024) {
+                    $message.text(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+                    alert(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+                    $submitButton.prop('disabled', true);
+                    $imageInput.val('');
+                    return;
+                }
+                
+                // Validate file type
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                if (!allowedTypes.includes(file.type)) {
+                    $message.text('Please upload a valid image file (PNG, JPG, or JPEG).');
+                    alert('Please upload a valid image file (PNG, JPG, or JPEG).');
+                    $submitButton.prop('disabled', true);
+                    $imageInput.val('');
+                    return;
+                }
+                
+                // File is valid
+                $message.text('Logo uploaded successfully!');
+                $submitButton.prop('disabled', false);
+            } else {
+                $message.text('');
+                $submitButton.prop('disabled', false);
+            }
+        });
+    });
+</script>

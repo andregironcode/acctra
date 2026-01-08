@@ -1,0 +1,49 @@
+<div class="container-fluid mt-4">
+   <%= link_to 'Go Back', request.referer || root_path, class: "btn setBtnStats p-2 px-3" %>
+ 
+  <h1 class="mb-4 mt-4 text-center">Order No #<%=@order.id %></h1>
+    <div class="shadow mt-2 productTableRadius ">
+        <div class="table-responsive">
+            <table class="table productTable text-center mobile-table mobile-order-detail" id="dataTable" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Product Sku</th>
+          <th>Brand</th>
+          <th>Device Type</th>
+          <th>Model Number</th>
+          <th>Forwarder</th>
+          <th>Unit Price</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @order.order_items.each do |item| %>
+          <tr>
+          
+            <td>
+              <%= item.product.name %>
+            </td>
+            <td><%= item.product.sku %></td>
+            <td><%= item.product.brand.name %></td>
+            <td><%= item.product.device.name %></td>
+            <td><%= item.product.category.name %></td>
+            <td><%= @order.forwarder %></td>
+            <td><%= number_to_currency(item.price, precision: 0) %></td>
+            <td>x<%= item.quantity %></td>
+            <td><%= number_to_currency(item.price * item.quantity, precision: 0) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  <div class="mt-4 px-4">
+    <h4>Order Summary</h4>
+    <div class="d-flex justify-content-between fw-bold">
+      <p>Total</p>
+      <p><%= number_to_currency(@order.total_amount , precision: 0)%></p>
+    </div>
+  </div>
+</div>

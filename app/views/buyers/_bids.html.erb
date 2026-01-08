@@ -1,0 +1,99 @@
+<% if bids.present? %>
+<% bids.each do |bid| %>
+<tr>
+    <td class="py-4"><%= bid.created_at.strftime("%d %b %Y") %></td>
+    <td class="py-4" id="<%=bid.id%>-bid-productName"><%= bid.inventory.product.name %></td>
+    <td class="py-4" id="<%=bid.id%>-bid-pcs"><%= bid.quantity %></td>
+    <td class="py-4" id="<%=bid.id %>-base-price"><%= number_to_currency(bid.inventory.price , precision: 0) %></td>
+    <% if role == "buyer" %>
+    <td class="py-4" id="<%=bid.id%>-bid-buyerOffer"><%= bid.quoted_price.present? ? number_to_currency(bid.quoted_price , precision: 0) : "respond to seller's offer" %></td>
+    <td class="py-4 " id="<%=bid.id%>-bid-sellerOffer"><%= bid.offer_price.present? ? number_to_currency(bid.offer_price , precision: 0) : 'waiting for sellers offer' %></td>
+    <% else%>
+    <td class="py-4" id="<%=bid.id%>-bid-buyerOffer"><%= bid.quoted_price.present? ? number_to_currency(bid.quoted_price, precision: 0) : "waiting for buyer's bid"  %></td>
+    <td class="py-4"><%= number_to_currency(bid.offer_price , precision: 0) %></td>
+    <% end %>
+    <td class="py-4"><%= bid.status %></td>
+   <% if bid.status == "rejected" %>
+    <td class="py-4">
+        <button class="btn  setBtnStats dropdown-toggle opacity" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" data-toggle="tooltip" data-placement="bottom" title=" Can't Perform Action On Rejected Bids">
+            Select Action
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" />
+            </svg>
+        </button>
+    </td>
+    <%else %>
+        <% if role == "buyer" %>
+         <% if bid.offer_price.present? %>
+           <td class="py-4">
+                <div class="">
+                    <button class="btn  setBtnStats dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Select Action
+                        <svg width="24" height="25" viewBox="0 0 24 25" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" />
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item negotiateBtn" href="#" id="" data-bid-id="<%= bid.id %>" data-bs-toggle="modal" data-bs-target="#negotiateModal">Negotiate</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="accept(event)" data-bid-id="<%= bid.id %>" data-seller="<%= role == 'seller' %>" data-method="post">Accept</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="reject(event)" data-bid-id="<%= bid.id %>" data-method="delete">Reject</a></li>
+
+                    </ul>
+                </div>
+            </td>
+        <% else %>
+         <td class="py-4">
+            <button class="btn  setBtnStats opacity dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" 
+            data-toggle="tooltip" data-placement="bottom" title="Waiting for the Seller's Offer."
+            >
+                Select Action
+                <svg width="24" height="25" viewBox="0 0 24 25" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" />
+                </svg>
+            </button>
+            </td>
+            <% end %>
+         <% elsif role == "seller" && bid.quoted_price.present? %>
+         <td class="py-4">
+                <div class="">
+                    <button class="btn  setBtnStats dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Select Action
+                        <svg width="24" height="25" viewBox="0 0 24 25" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" />
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item negotiateBtn" href="#" id="" data-bid-id="<%= bid.id %>" data-bs-toggle="modal" data-bs-target="#negotiateModal">Negotiate</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="accept(event)" data-bid-id="<%= bid.id %>" data-seller="<%= role == 'seller' %>" data-method="post">Accept</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="reject(event)" data-bid-id="<%= bid.id %>" data-method="delete">Reject</a></li>
+
+                    </ul>
+                </div>
+            </td>
+        <% else %>
+         <td class="py-4">
+            <button class="btn  setBtnStats opacity dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" 
+            data-toggle="tooltip" data-placement="bottom" title="Waiting for the Buyers's Offer."
+            >
+                Select Action
+                <svg width="24" height="25" viewBox="0 0 24 25" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" />
+                </svg>
+            </button>
+            </td>
+        <% end %>
+
+        
+    <% end %> 
+
+
+
+
+
+</tr>
+<% end %>
+<% else %>
+<tr>
+    <td colspan="12" class="py-4">No Bids found</td>
+</tr>
+<% end %>

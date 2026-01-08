@@ -28,4 +28,10 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  devise:
+    failure:
+      user:
+        not_approved: 'Your account has not been approved yet. Please contact support.'
+        suspended: 'Your account has been suspended. Please contact support.'
+
+

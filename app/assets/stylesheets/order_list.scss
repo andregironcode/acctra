@@ -1,0 +1,56 @@
+.chngeBgColorOrderTr{
+    background: rgba(72, 128, 255, 0.1);
+}
+.setStatusOrderList span{
+ background: #bfdaff;
+ color: #077bff;
+ padding: 5px 20px;
+ border-radius: 4.5px;
+}
+.setStatusProcessing span{
+    background: #e0d4fc;
+    color: #6226ef;
+    padding: 5px 20px;
+    border-radius: 4.5px;
+}
+.setStatusRejected span{
+    background: #fcd7d4;
+    color: #f14c3c;
+    padding: 5px 20px;
+    border-radius: 4.5px;
+}
+.setStatusCompleted span{
+    background: #ccf0eb;
+    color: #00b69b;
+    padding: 5px 20px;
+    border-radius: 4.5px;
+}
+
+.table{
+    margin-bottom: 0 !important;
+}
+@media screen and (max-width:540px) {
+    .productText{
+        font-size: 24px !important;
+    }
+}
+@media screen and (max-width:530px) {
+    .productsHeader{
+        flex-direction: column;
+        align-items: start;
+        margin-bottom: 8px;
+    }
+    .mobile-width-search{
+        width: 100%;
+    }
+    .ProductSearchFlex{
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+.filter-btn-round{
+    border: 1px solid #595858 !important;
+    background-color: transparent;
+    color: black;
+    font-weight: 700;
+}

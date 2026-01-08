@@ -1,0 +1,135 @@
+<ul class="navbar-nav bg-white sidebar accordion" id="accordionSidebar">
+<div class="d-flex justify-content-end">
+  <button id="sidebarToggleTop" class="btn btn-link d-b-sm rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+    </div>
+<div class="d-flex align-items-center justify-content-center">
+  <div class="mx-3 logo">
+                    <%= image_tag('logo.jpg', class:"logo-img", alt: 'Search', style: "width: 135px; height: 135px") %>
+
+  </div>
+</div>
+  <li class="nav-item active">
+  
+    <!-- Dashboard link -->
+    <a class="nav-link text-center text-black <%= request.path == '/admin' ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin">
+      <% if request.path == '/admin' %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Dashboard</span>
+    </a>
+
+    <a class="nav-link text-center text-black <%= request.path == '/admin/statistics' ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/statistics">
+      <% if request.path == '/admin/statistics' %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Statistics</span>
+    </a>
+      <hr class="sidebar-divider">
+
+
+     <% brands_path = ['/admin/brands', '/admin/brands/new', '/admin/brands/edit'].include?(request.path) || request.path =~ /^\/admin\/brands\/\d+/ %>
+    <a class="nav-link text-center text-black <%= brands_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/brands">
+      <% if brands_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Brands</span>
+    </a>
+
+
+       <% devices_path = ['/admin/devices', '/admin/devices/new', '/admin/devices/edit'].include?(request.path) || request.path =~/^\/admin\/devices\/\d+/ %>
+    <a class="nav-link text-center text-black <%= devices_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/devices">
+      <% if devices_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Devices</span>
+    </a>
+
+    <% categories_path = ['/admin/models', '/admin/models/new', '/admin/models/edit'].include?(request.path) || request.path =~ /^\/admin\/models\/\d+/ %>
+    <a class="nav-link text-center text-black <%= categories_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/models">
+      <% if categories_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Models</span>
+    </a>
+
+    <% product_inventories_path = ['/admin/products', '/admin/products/new', '/admin/products/edit'].include?(request.path) || request.path =~ /^\/admin\/products\/\d+/ %>
+    <a class="nav-link text-center text-black <%= product_inventories_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/products">
+      <% if product_inventories_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Products</span>
+    </a>
+  <hr class="sidebar-divider">
+
+ <% inventories_path = ['/admin/inventories', '/admin/inventories/new', '/admin/invitations/edit'].include?(request.path) || request.path =~ /^\/admin\/inventories\/\d+/ %>
+    <a class="nav-link text-center text-black <%= inventories_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/inventories">
+      <% if inventories_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Inventories</span>
+    </a>
+
+     <% orders_path = ['/admin/orders', '/admin/orders/new', '/admin/orders/edit'].include?(request.path) || request.path =~ /^\/admin\/orders\/\d+/ %>
+    <a class="nav-link text-center text-black <%= orders_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/orders">
+      <% if orders_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Orders List</span>
+    </a>
+<% bids_path = ['/admin/bids', '/admin/bids/new', '/admin/bids/edit'].include?(request.path) || request.path =~ /^\/admin\/bids\/\d+/ %>
+    <a class="nav-link text-center text-black <%= bids_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/bids">
+      <% if bids_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Bids</span>
+    </a>
+
+    <% forwarders_path = ['/admin/forwarders', '/admin/forwarders/new', '/admin/forwarders/edit'].include?(request.path) || request.path =~ /^\/admin\/forwarders\/\d+/ %>
+    <a class="nav-link text-center text-black <%= forwarders_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/forwarders">
+      <% if forwarders_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Forwarders</span>
+    </a>
+  <hr class="sidebar-divider">
+
+      <% invitations_path = ['/admin/invitations', '/admin/invitations/new', '/admin/invitations/edit'].include?(request.path) || request.path =~ /^\/admin\/invitations\/\d+/ %>
+    <a class="nav-link text-center text-black <%= invitations_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/invitations">
+      <% if invitations_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Invitations</span>
+    </a>
+
+    
+     <% users_path = ['/admin/users', '/admin/users/new', '/admin/users/edit'].include?(request.path) || request.path =~ /^\/admin\/users\/\d+/ %>
+    <a class="nav-link text-center text-black <%= users_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/users">
+      <% if users_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Users</span>
+    </a>
+ <% admin_users_path = ['/admin/admin_users', '/admin/admin_users/new', '/admin/admin_users/edit'].include?(request.path) || request.path =~ /^\/admin\/admin_users\/\d+/ %>
+    <a class="nav-link text-center text-black <%= admin_users_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/admin_users">
+      <% if admin_users_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>Admin Users</span>
+    </a>
+    
+  
+  </li>
+
+
+  <hr class="sidebar-divider mt-auto">
+
+
+  <li class="nav-item">
+    <%= link_to destroy_admin_user_session_path	, class: 'nav-link salesText text-center' do %>
+      <span>Logout</span>
+    <% end %>
+  </li>
+
+</ul>

@@ -1,0 +1,58 @@
+<div class="container">
+    <%= form_tag(@device.persisted? ? admin_device_path(@device) : '/admin/devices', 
+               method: @device.persisted? ? :put : :post, 
+               class: 'formtastic product', 
+               ) do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+    <h1><%= @device.persisted? ? "Edit Device" : "New Device" %></h1>
+    <fieldset class="form-group">
+
+        <% if @device.errors.any? %>
+        <div class="alert alert-danger">
+            <ul>
+                <% @device.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+
+        <div class="form-row mt-4">
+
+            <div class="form-group col-md-12">
+                <%= label_tag 'device[brand_id]', "Brand", class: 'control-label' %>
+                <%= collection_select :device, :brand_id, Brand.all, :id, :name, { prompt: "Select Brand" }, class: 'form-control', required: true %>
+                <% if @device.errors[:brand_id].any? %>
+                <div class="text-danger">
+                    <%= @device.errors[:brand_id].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+
+        <div style="display: <%= @device.persisted? ? 'block' : 'none'  %> " id="device-form">
+            <div class="form-row mt-4">
+                <div class="form-group col-md-12">
+                    <%= label_tag 'device[name]', "Name", class: 'control-label' %>
+                    <%= text_field_tag 'device[name]', @device.name, class: 'form-control', required: true, placeholder:"Enter device name" %>
+                    <% if @device.errors[:name].any? %>
+                    <div class="text-danger">
+                        <%= @device.errors[:name].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <div class="form-row">
+                <div class="form-group col-md-2 d-flex">
+                    <%= submit_tag @device.persisted? ? 'Update Device' : 'Create Device', 
+                         class: 'btn btn-primary py-2 mr-2' %>
+                    <%= link_to 'Cancel', '/admin/devices', class: 'btn btn-secondary' %>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <% end %>
+</div>

@@ -1,0 +1,2 @@
+$('#bidsList').html('<%= j render partial: "bids", locals: { bids: @bids , role: "buyer"} %>');
+$('#pagination').html('<%= j paginate(@bids) %>');

@@ -1,0 +1,130 @@
+.bg-gradient-primary {
+    background-color: rgba(72, 128, 255, 1) !important;
+}
+.bg-login-image {
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .bg-register-image {
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .bg-password-image {
+    background-position: center;
+    background-size: cover;
+  }
+  
+  form.user {
+  
+    .custom-checkbox.small {
+      label {
+        line-height: 1.5rem;
+      }
+    }
+  
+    .form-control-user {
+      font-size: 0.8rem;
+      border-radius: 10rem;
+      padding: 1.5rem 1rem;
+    }
+  
+    .btn-user {
+      font-size: 0.8rem;
+      border-radius: 10rem;
+      padding: 0.75rem 1rem;
+    }
+  
+  }
+
+.radiusLogin{
+    border-radius: 24px !important;
+}
+.loginText{
+    font-size: 32px;
+    font-family: "Nunito Sans";
+    font-weight: 700;
+}
+.descOflogin{
+    font-size: 18px;
+    font-family: "Nunito Sans";
+    font-weight: 500;
+
+}
+.emailLogin{
+    font-size: 18px;
+    font-family: "Nunito Sans";
+    font-weight: 500;
+    color:rgba(32, 34, 36, 1);
+}
+.forgotPass{
+    font-size: 18px;
+    font-family: "Nunito Sans";
+    font-weight: 500;
+    color:#4d4e50;
+    cursor: pointer;
+}
+.emailBgLogin{
+    background: rgba(241, 244, 249, 1);
+}
+.rememberPassLogin{
+    font-size: 18px;
+    font-family: "Nunito Sans";
+    font-weight: 500;
+    color:#4d4e50;
+}
+.signInText{
+    font-size: 20px;
+    font-family: "Nunito Sans";
+    font-weight: 500;
+    background: rgba(72, 128, 255, 1);
+    color: white;
+    cursor: pointer;
+}
+.logInWidth{
+    width: 35% !important;
+    height: 100vh;
+}
+.bgImgLogin{
+    background-image: url(asset-path("bg.png")) !important;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+}
+@media screen and (max-width:1150px) {
+    .logInWidth{
+        width: 50% !important;
+    }
+    .loginText{
+        font-size: 22px;
+    }
+    .descOflogin{
+        font-size: 12px;
+    }
+    .emailLogin{
+        font-size: 12px;
+    }
+    .forgotPass{
+        font-size: 12px;
+    }
+    .rememberPassLogin{
+        font-size: 12px;
+    }
+}
+@media screen and (max-width:750px) {
+    .logInWidth{
+        width: 100% !important;
+    }
+}
+.forgetPassPsgeLgn{
+    display: flex;
+    justify-content: end;
+    text-decoration: none !important;
+    outline: none !important;
+    font-size: 18px;
+    font-family: "Nunito Sans";
+    font-weight: 500;
+    margin: 15px 0;
+}

@@ -1,0 +1,55 @@
+  <% if inventories.present? %>
+  <% inventories.each do |inventory| %>
+  <tr>
+      <td class="py-4 text-center"><%= inventory.rank %></td>
+      <td style="border-top: 1px solid #e3e6f0">
+  <div class="d-flex justify-content-center">
+    <% if inventory.product.country.present? %>
+      <% if inventory.product.country.downcase == "europe" %>
+        <%= image_tag "europe.svg", width: 35, height: 35, alt: "Europe Flag" %>
+      <% else %>
+        <div class="flag flag-icon flag-icon-<%= inventory.product.country.downcase %> flag-icon-squared"></div>
+      <% end %>
+    <% else %>
+      No flag
+    <% end %>
+  </div>
+</td>
+
+      <td class="py-4 text-center"><%= inventory.product.name %></td>
+      <td class="py-4 text-center">
+          <%= inventory.product.brand.present? ? inventory.product.brand.name : 'No brand' %>
+      </td>
+
+      <td class="py-4 text-center">
+          <%= inventory.product.device.present? ? inventory.product.device.name : 'No device' %>
+      </td>
+      <td class="py-4 text-center"><%= inventory.product.category.name %></td>
+      <td class="py-4 text-center"><%= inventory.product.sku %></td>
+      <td class="py-4 text-center"><%= inventory.product.variant %></td>
+      <td class="py-4 text-center"><%= inventory.stock_quantity %></td>
+      <td class="py-4 text-center"><%= number_to_currency(inventory.price , precision: 0) %></td>
+      <td class="py-4 align-items-center d-flex justify-content-center">
+          <div class="d-flex rounded-3 text-align-center justify-content-center bckcolor ">
+              <%= link_to edit_products_inventory_path(inventory), class: '' do %>
+              <div class="p-2  border-top-0 border-left-0 border-bottom-0 rounded-0 borderRight" data-toggle="tooltip" data-placement="bottom" title="Edit">
+                  <%= image_tag('pencil-write.svg', alt: 'pencil', class: '') %>
+              </div>
+              <% end %>
+              <%= form_tag(products_inventory_path(inventory), method: :delete, class: 'd-inline', onsubmit:"confirmDelete(event)") do %>
+              <div class="p-2  border-0" data-toggle="tooltip" data-placement="bottom" title="Delete">
+                  <button type="submit" class="search-button p-0">
+                      <%= image_tag('bin.svg', alt: 'Search', class: 'search-icon') %>
+                  </button>
+              </div>
+              <% end %>
+          </div>
+
+      </td>
+  </tr>
+  <% end %>
+  <% else %>
+  <tr>
+      <td colspan="12" class="text-center">No Inventory Found</td>
+  </tr>
+  <% end %>

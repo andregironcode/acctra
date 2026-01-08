@@ -1,0 +1,86 @@
+class SeedForwarders < ActiveRecord::Migration[7.1]
+  def up
+    forwarder_names = [
+      "24H LOGISTICS FZE",
+      "4 ALL GROUP FZCO",
+      "5G TELECOM FZCO",
+      "ACTION LOGISTICS FZE",
+      "ADPRESS INTERNATIONAL FZCO",
+      "AL BARGHOUTHI GEN.TRD",
+      "AL THANAYYAN INTERNATIONAL ONE PER",
+      "AMIR GROUP FZCO",
+      "APL GLOBAL LOGISTICS L.L.C",
+      "APOLLO FREIGHT SERVICES FZCO",
+      "AZE XPRESS FZCO",
+      "BABBAR FZCO",
+      "CAPTAINS FREIGHT SERVICES FZCO",
+      "CELL NATION FZE",
+      "CELL NATION TRADING L.L.C",
+      "CONTINENTAL TECHNOLOGY FZCO",
+      "CROWN LOGISTICS FZCO",
+      "DEPPA LEADER LOGISTICS FZCO",
+      "EAST FAIR TRADE FZCO",
+      "EASY WORLD LOGISTICS FZCO",
+      "ELITE CARGO FZCO",
+      "EURO EXPRESS FZCO",
+      "FIMEX LOGISTICS FZCO",
+      "FiRST CONNECT TRADING FZCO",
+      "FLASH LOGISTICS FZCO",
+      "FLC LOGISTICS FZCO",
+      "FORTBEL TELECOM FZCO",
+      "FOUR B LOGISTICS FZCO",
+      "GIGAPULSE ELECTRONICS FZCO",
+      "GLOBAL TRADE & FORWARDING FZCO",
+      "GSM BAZAAR FZCO",
+      "HUTCHINSON TELECOM FZCO",
+      "LOGIVERSE LOGISTICS FZCO",
+      "LOGIX ONE FZE",
+      "LUMINARI TRADING FZCO",
+      "MAC MOBILES FZCO",
+      "MAXUS CORAL FZCO",
+      "MEGA STORE TRADING FZCO",
+      "MISSION FREIGHT FZCO",
+      "MKA LOGISTICS FZCO",
+      "MOONSTRIKE INTERNATIONAL TRADING FZCO",
+      "ORBIT LOGISTICS FZCO",
+      "ORG LOGISTICS FZE",
+      "OTM Trading FZCO",
+      "PHONE HOUSE FZCO",
+      "R&B LOGISTICS FZCO",
+      "ROMEX TELECOM FZCO",
+      "RONICE PLUS TRADING FZCO",
+      "SECURED LOGISTICS SOLUTION FZCO",
+      "SERVICE GATE 3LOGISTICS FZCO",
+      "SEVEN DAYS LOGISTICS FZCO",
+      "SG INTERNATIONAL FZCO",
+      "SHANYRAQ CARGO FZCO",
+      "SHEPHERD INTERNATIONAL LLC",
+      "SMART TALK TELECOM FZCO",
+      "SUPERNOVA TECHNOLOGIES FZCO",
+      "SVH GROUP LLC",
+      "TECHNOLIFE FZCO",
+      "THT FZCO",
+      "TURBO FREIGHT SERVICES",
+      "UNION LOGISTICS FZE",
+      "UNITED FREIGHT NETWORK FZCO",
+      "V LINK LOGISTICS FZCO",
+      "VIP GROUP FZCO",
+      "XPRESS LOGISTICS FZCO",
+      "YESI FZCO",
+      "Z LINE FZCO",
+      "ZMC EXPRESS CARGO FZCO",
+      "ZOMOR INTERNATIONAL FZCO"
+    ]
+
+    forwarder_names.each do |name|
+      Forwarder.find_or_create_by(name: name) do |forwarder|
+        forwarder.active = true
+      end
+    end
+  end
+
+  def down
+    # Remove seeded forwarders
+    Forwarder.where(active: true).destroy_all
+  end
+end

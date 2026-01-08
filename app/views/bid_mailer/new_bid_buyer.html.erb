@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bid Confirmation</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+    .container { background: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+    .header { font-size: 20px; color: #333; text-align: center; font-weight: bold; }
+    .details { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+    .button { display: inline-block; padding: 10px 15px; background: #630CDB; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="header">✅ Your Bid Has Been Placed – Now, Let’s Win It!</p>
+
+
+    <p>Your bid has been successfully placed on:</p>
+
+    <div class="details">
+      <p>🛍 <strong>Product:</strong> <%= @product_name %></p>
+      <p>💰 <strong>Your Bid:</strong> $<%= @amount %></p>
+      <p>📦 <strong>Quantity:</strong> <%= @quantity %></p>
+      <p>⏳ <strong>Time Placed:</strong> <%= @time %></p>
+    </div>
+
+    <p>We’ll notify you as soon as the seller responds. Stay tuned!</p>
+
+    <p style="text-align: center; color: #ffffff;">
+      <a href="<%= @url %>" class="button" style="color: #fff">🔗 Track Your Bid</a>
+    </p>
+
+    <p>Good luck!</p>
+  </div>
+</body>
+</html>

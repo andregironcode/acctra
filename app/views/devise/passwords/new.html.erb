@@ -1,0 +1,41 @@
+<div class="bg-gradient-primary bgImgLogin">
+    <div class="container logInWidth align-items-center justify-content-center d-flex">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card o-hidden border-0 my-5 radiusLogin">
+                    <div class="card-body p-0">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-12 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-12 h-100">
+                                <div class="p-5">
+                                    <div class="text-center mb-4">
+                                        <h1 class="h4 text-gray-900 loginText">Forgot Your Password?</h1>
+                                        <p class="descOflogin">
+                                            Enter your email, and we'll help you reset your password
+                                        </p>
+                                    </div>
+                                    
+                                    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+                                        <%= render "devise/shared/error_messages", resource: resource %>
+
+                                        <div class="form-group">
+                                            <label class="emailLogin mb-3" for="email">Email Address:</label>
+                                            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control emailBgLogin", placeholder: "Email here..." %>
+                                        </div>
+
+                                        <a class="forgetPassPsgeLgn" href="<%= new_session_path(resource_name) %>">Login</a>
+
+                                        <div class="justify-content-center d-flex">
+                                            <%= f.submit "Send Reset Link", class: "btn btn-primary w-75 signInText" %>
+                                        </div>
+                                    <% end %>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

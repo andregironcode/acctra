@@ -1,0 +1,29 @@
+<% if orders.any? %>
+<% orders.each do |order| %>
+<% order.order_items.limit(1).each do |item| %>
+<tr class="setBorderBottomTr" onclick="window.location='/admin/orders/<%= order.id %>'">
+    <td> <%= link_to item.inventory.seller.full_name, admin_user_path(item.inventory.seller.id) %> </td>
+    <td> <%= link_to item.inventory.product.name, admin_product_path(item.inventory.product.id) %> </td>
+    <td><%= item.inventory.product.sku %></td>
+    <td><%= order.created_at.strftime("%d.%m.%Y - %I.%M %p") %></td>
+    <td><%= item.quantity %></td>
+    <td><%= "$#{item.inventory.price * item.quantity}" %></td>
+    <td>
+        <span class="badge-status <%= 'bg-new' if order.status == 'created' data-toggle="tooltip" data-placement="bottom" title="<%= order.status%>" %>
+            <%= 'bg-process' if order.status == 'processing' %>
+            <%= 'bg-secondary' if order.status == 'dispatched' %>
+            <%= 'bg-completed' if order.status == 'completed' %>">
+            <%= order.status.capitalize %>
+        </span>
+    </td>
+    <td>
+        <a href="admin/orders/<%=order.id %>"> View Order</a>
+    </td>
+</tr>
+<% end %>
+<% end %>
+<% else %>
+<tr>
+    <td colspan="12" class="text-center">No recent orders present</td>
+</tr>
+<% end %>

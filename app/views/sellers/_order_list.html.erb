@@ -1,0 +1,98 @@
+<% if orders.present? %>
+<% orders.each do |order| %>
+
+<tr class="clickable-row" data-href="/order-details/<%= order.id %>" style="cursor: pointer;">
+    <td>
+<% if orders.select { |o| o.buyer_id == order.buyer_id && o.forwarder == order.forwarder && o.created_at.to_date == Date.today && order.created_at.to_date == Date.today }.size > 1 %>
+            <input type="checkbox" class="order-checkbox" data-id="<%= order.id %>" data-buyer-id="<%= order.buyer_id %>"> 
+        <% end %>
+
+    </td>
+    <td class="py-4">#<%= order.id %></td>
+    <td class="py-4"><%= number_to_currency(order.total_amount  , precision: 0) %></td>
+    <td class="py-4"><%= order.created_at.strftime("%d %b %Y") %></td>
+
+    <td class="py-4 d-flex justify-content-center ">
+
+
+        <button class="<%= "order-page-status order-status-#{order.status}" %> new-badge border-none d-flex align-items-center " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="" id="dateBtn">
+                <% if order.status == 'created' %>
+                <span class="blink-badge">New</span>
+                New
+                <% else %>
+                <%= order.status.capitalize %>
+                <% end %>
+            </div>
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" class="<%= "order-#{order.status}-fill" %>" />
+            </svg>
+
+        </button>
+        <ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton1" id="">
+            <li><a class="dropdown-item" href="/orders/<%=order.id%>/status?status=new">New</a></li>
+            <li><a class="dropdown-item" href="/orders/<%=order.id%>/status?status=processing">Processing</a></li>
+            <li><a class="dropdown-item" href="/orders/<%=order.id%>/status?status=completed">Completed</a></li>
+        </ul>
+
+    </td>
+    <td class="py-4">
+
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Actions
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.415 8.70996L12 13.295L16.585 8.70996L18 10.125L12 16.125L6 10.125L7.415 8.70996Z" />
+            </svg>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="dateDropdown">
+            <li><a href="/order-details/<%= order.id %>" class="dropdown-item">View</a></li>
+            <li><a href="/print-sellers-order?order=<%= order.id %>" target="_blank" class="dropdown-item">Print Order</a></li>
+
+            <li>
+                <%= link_to "Add Products Details",upload_imei_path(order_id: order.id) , class: "dropdown-item"%>
+            </li>
+            <% if order.order_product_details.present?%>
+            <li>
+                <%= link_to "View Products Details", product_details_path(order_id: order.id) , class: "dropdown-item"%>
+            </li>
+            <% end %>
+        </ul>
+    </td>
+</tr>
+<% end %>
+<% else %>
+<tr>
+    <td colspan="12" class="py-4">No orders found</td>
+</tr>
+<% end %>
+<script>
+$(document).ready(function() {
+  function checkBuyerConsistency() {
+    var selectedBuyerIds = [];
+    
+    $('.order-checkbox:checked').each(function() {
+      selectedBuyerIds.push($(this).data('buyer-id'));
+    });
+
+    if (new Set(selectedBuyerIds).size > 1) {
+      toastr.error("Error: You cannot consolidate orders from different buyers.");
+      $('.order-checkbox:checked').prop('checked', false); 
+    }
+  }
+
+  $('.order-checkbox').change(function() {
+    checkBuyerConsistency();
+  });
+});
+
+$(document).ready(function() {
+  $(".clickable-row").click(function(event) {
+    if ($(event.target).closest("input, button, a, .dropdown-menu, .dropdown-toggle, svg, path").length > 0) {
+      return; 
+    }
+
+    window.location = $(this).data("href");
+  });
+});
+
+</script>

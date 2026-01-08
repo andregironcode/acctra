@@ -1,0 +1,2 @@
+module ProductsInventoriesHelper
+end

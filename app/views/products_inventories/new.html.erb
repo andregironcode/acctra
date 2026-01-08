@@ -1,0 +1,112 @@
+<div class="container">
+    <%= form_tag(products_inventories_path, method: :post, class: 'formtastic product', novalidate: true) do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+    <h1>New Product Inventory</h1>
+    <fieldset class="form-group">
+        <% if @inventory.errors.any? %>
+        <div class="alert alert-danger">
+            <ul>
+                <% @inventory.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+        <%= hidden_field_tag 'inventory[seller_id]', current_user.id, required: true %>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <%= label_tag '', "Brand", class: 'control-label' %>
+                <%= select_tag :brand_id, options_from_collection_for_select(Brand.all, :id, :name), prompt: 'Select Brand', class: 'form-select', id: 'brand_select' %>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12 d-none" id="device_div">
+                <%= label_tag '', "Device", class: 'control-label' %>
+                <select id="inventory_device" name="" class="form-select">
+                    <option value=""> Select Device</option>
+                </select>
+            </div>
+            <p style="display: none" id="no-device"> No Device Found in this Brand</p>
+
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12 d-none" id="category_div">
+                <%= label_tag '', "Model", class: 'control-label' %>
+                <select id="inventory_category" class="form-select">
+                    <option> Select Model </option>
+                </select>
+            </div>
+            <p style="display: none" id="no-cat"> No Model Found in this Device</p>
+
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group col-md-12 d-none" id="country_div">
+                <%= label_tag '', "Country", class: 'control-label' %>
+                <select id="inventory_country" class="form-select">
+                    <option> Select Country </option>
+                </select>
+            </div>
+            <p style="display: none" id="no-country"> No Country Found in this Device</p>
+
+        </div>
+
+        <div class="form-row ">
+            <div class="form-group col-md-12 d-none" id="products_div">
+                <%= label_tag '', "Product", class: 'control-label' %>
+                <select id="inventory_products" class="form-select" name="inventory[product_id]" required>
+                    <option> Select Product </option>
+                </select>
+                <% if @inventory.errors[:product_id].any? %>
+                <div class="text-danger">
+                    <%= @inventory.errors[:product_id].join(', ') %>
+                </div>
+                <% end %>
+
+            </div>
+        </div>
+        <div class="d-none" id="stock-price">
+            <div class="form-row ">
+                <div class="form-group col-md-12 " id="">
+                    <%= label_tag '', "Stock Quantity", class: 'control-label' %>
+                    <%= number_field_tag 'inventory[stock_quantity]', nil, min: 0, class: 'form-control', required: true %>
+
+                    <% if @inventory.errors[:stock_quantity].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:stock_quantity].join(', ') %>
+                    </div>
+                    <% end %>
+
+                </div>
+            </div>
+
+            <div class="form-row ">
+                <div class="form-group col-md-12" id="">
+                    <%= label_tag '', "Price", class: 'control-label' %>
+                    <%= number_field_tag 'inventory[price]', nil, step: 1, class: 'form-control', required: true %>
+                    <i> Price in US dollars </i>
+                    <% if @inventory.errors[:price].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:price].join(', ') %>
+                    </div>
+                    <% end %>
+
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group col-md-2 d-flex">
+                    <%= submit_tag 'Create Stock', class: 'btn btn-primary py-2 mr-2' %>
+                    <%= link_to 'Cancel', '/product-inventories', class: 'btn btn-secondary' %>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <% end %>
+</div>

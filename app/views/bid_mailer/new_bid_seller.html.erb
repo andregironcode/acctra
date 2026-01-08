@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Bid Received</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+    .container { background: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+    .header { font-size: 20px; color: #333; text-align: center; font-weight: bold; }
+    .details { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+    .button { display: inline-block; padding: 10px 15px; background: #630CDB; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="header">New Bid Alert! Someone's Interested in Your Product</p>
+    
+    
+
+    <p>Great news! A new bid has been placed on your product:</p>
+
+    <div class="details">
+      <p>🛍 <strong>Product:</strong> <%= @product_name %></p>
+      <p>💰 <strong>Bid Amount:</strong> $<%= @amount %></p>
+      <p>📦 <strong>Quantity:</strong> <%= @quantity %></p>
+      <p>⏳ <strong>Bid Time:</strong> <%= @time %></p>
+    </div>
+
+    <p>Act fast! Review the bid and decide whether to accept or counter. Don't miss this opportunity!</p>
+
+    <p style="text-align: center; color: #ffffff;">
+      <a href="<%= @url %>" class="button" style="#ffffff">🔗 View Bid Details</a>
+    </p>
+
+    <p>Happy Selling,</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<% if @recent_orders.any? %>
+  var htmlContent = "";
+  <% @recent_orders.each do |order| %>
+    <% order.order_items.limit(1).each do |item| %>
+      htmlContent += `
+        <tr class="setBorderBottomTr">
+          <td> <%= item.inventory.product.name  %> </td>
+          <td><%= item.inventory.product.sku %></td>
+          <td><%= order.created_at.strftime("%d.%m.%Y - %I.%M %p") %></td>
+          <td><%= item.quantity %></td>
+          <td><%= "$#{item.inventory.price * item.quantity}" %></td>
+          <td>
+            <button class="badge-status 
+                          <%= 'bg-new' if order.status == 'created' %>
+
+              <%= 'bg-process' if order.status == 'processing' %>
+              <%= 'bg-secondary' if order.status == 'dispatched' %>
+              <%= 'bg-completed' if order.status == 'completed' %>">
+              <%= order.status %>
+            </button>
+          </td>
+        </tr>`;
+    <% end %>
+  <% end %>
+
+  $('#recent_orders_body').html(htmlContent);
+<% else %>
+  // If there are no orders, clear the table and show a "No orders" message
+  $('#recent_orders_body').html(`
+    <tr>
+      <td colspan="7" class="text-center">No recent orders present</td>
+    </tr>
+  `);
+<% end %>

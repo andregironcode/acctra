@@ -1,0 +1,296 @@
+<div class="d-flex mb-2 justify-content-end">
+     <div class="dropdown">
+        <button class="d-flex align-items-center rounded-pill dropdown-toggle border filter-btn-round p-2 px-3" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= image_tag('filter.svg', alt: 'Search', class:'mx-2') %>
+        Filter
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu p-3" style="width: 360px;">
+            <!-- Date Picker -->
+            <div class="mb-3">
+                <label class="form-label">Date</label>
+                <div class="input-group">
+                    <input type="date" class="form-control" id="dashStartDate">
+                    <span class="input-group-text">→</span>
+                    <input type="date" class="form-control" id="DashEndDate">
+                </div>
+            </div>
+
+           
+
+            <!-- Apply Button -->
+            <div class="d-flex align-items-center justify-content-between">
+            <button class="btn btn-danger" id="dashFilterReset">Reset</button>
+            <button class="btn btn-primary" id="apply-filter-dash">Apply</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-between">
+    <div class="col-xl-4 col-md-6 mb-2 mobile-padding">
+        <a href="/orders-list" class="text-decoration-none" id="total-orders">
+
+            <div class="card h-100 borderNone">
+                <div class="card-body setPaddingCard">
+                    <div class="row no-gutters align-items-start">
+                        <div class="col orderFlex">
+                            <div class="orderText">
+                                Total Order
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 orderNumber" id="sellersOrders">
+                                <%= orders&.count %>
+                            </div>
+                            <div class="d-flex align-items-center setGap">
+
+                                <%      percentage_change = Order.percentage_change_in_orders(current_user, 'orders') %>
+
+                                <% if percentage_change >= 0%>
+                                <%= image_tag('ic-trending-up-24px.svg', alt: 'Search') %>
+
+                                <div class="chngeColor">
+                                    <span> <%= percentage_change.abs %>% </span>Up from yesterday
+                                </div>
+                                <%else%>
+                                <%= image_tag('Path.svg', alt: 'Search') %>
+
+                                <div class="chngeColorRed">
+                                    <span><%= percentage_change.abs %>% </span>Down from yesterday
+                                </div>
+                                <%end%>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <%= image_tag('Icon (1).svg', alt: 'Search') %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-2 mobile-padding">
+        <a href="/orders-list?order_status=completed" class="text-decoration-none" id="completed-orders">
+
+            <div class="card h-100 borderNone">
+                <div class="card-body setPaddingCard">
+                    <div class="row no-gutters align-items-start">
+                        <div class="col orderFlex">
+                            <div class="orderText">
+                                Total Sales
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 orderNumber" id="sellersSales"><%= number_to_currency(orders.where(status: "completed")&.sum(:total_amount), precision: 0)%>
+                            </div>
+                            <div class="d-flex align-items-center setGap">
+                                <%      percentage_change = Order.percentage_change_in_orders(current_user, 'orders') %>
+
+                                <% if percentage_change >= 0%>
+                                <%= image_tag('ic-trending-up-24px.svg', alt: 'Search') %>
+
+                                <div class="chngeColor">
+                                    <span> <%= percentage_change.abs %>% </span>Up from yesterday
+                                </div>
+                                <%else%>
+                                <%= image_tag('Path.svg', alt: 'Search') %>
+
+                                <div class="chngeColorRed">
+                                    <span><%= percentage_change.abs %>% </span>Down from yesterday
+                                </div>
+                                <%end%>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <%= image_tag('Icon (2).svg', alt: 'Search') %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="col-xl-4 col-md-6 mb-2 mobile-padding">
+        <a href="/orders-list?order_status=processing" class="text-decoration-none" id="processing-orders">
+
+            <div class="card h-100 borderNone">
+                <div class="card-body setPaddingCard">
+                    <div class="row no-gutters align-items-start">
+                        <div class="col orderFlex">
+                            <div class="orderText">
+                                Processing Orders
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 orderNumber" id="processingOrders"><%=  @processing_orders&.count %></div>
+                            <div class="d-flex align-items-center setGap">
+                                <%      percentage_change = Order.percentage_change_in_orders(current_user, 'processing') %>
+                                <% if percentage_change >= 0%>
+                                <%= image_tag('ic-trending-up-24px.svg', alt: 'Search') %>
+
+                                <div class="chngeColor">
+                                    <span> <%= percentage_change.abs %>% </span>Up from yesterday
+                                </div>
+                                <%else%>
+                                <%= image_tag('Path.svg', alt: 'Search') %>
+
+                                <div class="chngeColorRed">
+                                    <span><%= percentage_change.abs %>% </span>Down from yesterday
+                                </div>
+                                <%end%>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <%= image_tag('Icon (3).svg', alt: 'Search') %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-8 col-lg-7 col-sm-12 mb-2 mobile-padding">
+        <div class="shadow setPaddingCard orderChartBg borderNone">
+            <div class="chart-title">Total Orders</div>
+            <div class="chart-container">
+                <% if @orders.present?%>
+                <% product_counts = {} %>
+                <% @orders.each do |order| %>
+                <% order.order_items.each do |item| %>
+                <% product_name = item.product.category.name %>
+                <% product_counts[product_name] ||= 0 %>
+                <% product_counts[product_name] += 1 %>
+
+                <% end %>
+                <% end %>
+                <% sorted_product_counts = product_counts.sort_by { |name, count| -count }.take(4) %>
+
+                <div class="AdminsetHeightBars">
+                    <% sorted_product_counts.each do |name, count| %>
+                    <div class="bar" data-value="<%= count %>">
+                        <div class="label">
+                            <%= name %>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill">
+                            </div>
+                        </div>
+                    </div>
+                    <% end %>
+                    <% max_count = product_counts.values.max %>
+
+
+
+
+                </div>
+
+                <div class="axis d-none">
+                    <span> 0</span>
+                    <span id="firstValue"></span>
+                    <span id="secondValue"></span>
+                    <span id="thirdValue"></span>
+                    <span id="max-count"><%= max_count %></span>
+                </div>
+                <%end%>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5 mobile-padding">
+        <div class="card shadow mb-2 setPaddingCard borderNone">
+            <div class="d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 sellingProductsText">Top Selling Product</h6>
+
+            </div>
+            <hr class="sidebar-divider hrColor">
+            <div class="card-body p-0">
+                <div class="productsSellingParent setOverFlowDashBoard">
+                    <div id="seller-products-container">
+                        <% top_selling_products = Product.top_selling_products(3, current_user) %>
+                        <%top_selling_products.each do |product| %>
+
+                        <a href="/products/<%= product.id%>" class="full-width-link">
+                    <div class="sellingProducts mt-4">
+                      <div class="flag_alignment d-flex gap-3">
+                        <div class="productMemory">
+                          <span class="flag flag-icon flag-icon-<%=product.country.downcase%> flag-icon-squared"></span>
+                        </div>
+                        <div class="productName">
+                          <div><%= product.name %></div>
+                          <div class="productMemory"><%= product.variant %></div>
+                        </div>
+                      </div>
+                      <div class="productPrice">
+                        <div><%= number_to_currency(product.total_sales.round, precision: 0) %></div>
+                        <div class="productSales"><%= product.total_quantity_sold%> sales</div>
+                      </div>
+                    </div>
+                  </a>
+                        <% end %>
+                    </div>
+                </div>
+
+                <a href="/statistics" class="btn setBtnStats mt-3">
+                    VIEW STATS
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Row -->
+<div class="row mb-4">
+    <div class="col-lg-12 mobile-padding">
+        <div class="headerTableFlex borderNone setPaddingCard">
+            <div class="recent-orders">Recent Orders</div>
+            <%
+=begin%>
+            <div class="heeaderTableOrder mobile-table">
+                Recent Orders
+                <div class="monthNameFilter">
+                    <select class="monthNamesInput" name="monthly" id="">
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="one_week_ago">One Week ago</option>
+                    </select>
+
+                </div>
+            </div>
+            <%
+=end%>
+            <table class="table setRecentOrderTble text-center mobile-table" id="recentOrdersTable">
+                <thead class="tHeadBgColor ">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>SKU</th>
+                        <th>Date - Time</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="setFontOrderTable" id="recent_orders_body">
+                    <% if @recent_orders.present?%>
+                    <%  @recent_orders.each do |recent_order| %>
+                    <%  recent_order.order_items.limit(1).each do |order_item| %>
+                    <tr class="setBorderBottomTr" onclick="window.location='/order-details/<%= recent_order.id %>'">
+                        <td>
+                            <a href="/products/<%= order_item.inventory.product.id %>/"> <%=order_item.inventory.product.name %> </a>
+                        </td>
+                        <td><%= order_item.inventory.product.sku %></td>
+                        <td><%= recent_order.created_at.strftime("%d.%m.%Y - %I.%M %p") %></td>
+                        <td><%= order_item.quantity %></td>
+                        <td><%= number_to_currency(order_item.inventory.price * order_item.quantity, precision: 0) %></td>
+                        <td><button class="order-<%= recent_order.status %>"><%= recent_order.status == "created" ?  "New": recent_order.status.capitalize %></button></td>
+                    </tr>
+                    <% end %>
+                    <% end %>
+                    <% else %>
+                    <td colspan="12" class="text-center">No recent orders present</td>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

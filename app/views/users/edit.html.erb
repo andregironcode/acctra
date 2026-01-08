@@ -1,0 +1,196 @@
+<div class=" d-flex justify-content-center align-items-center mb-4 mt-4">
+    <% country_codes = [
+        { name: "United Arab Emirates", dial_code: "+971" },
+        { name: "United States", dial_code: "+1" },
+        { name: "United Kingdom", dial_code: "+44" },
+        { name: "Germany", dial_code: "+49" },
+        { name: "France", dial_code: "+33" },
+        { name: "Italy", dial_code: "+39" },
+        { name: "Spain", dial_code: "+34" },
+        { name: "Netherlands", dial_code: "+31" },
+        { name: "Belgium", dial_code: "+32" },
+        { name: "Switzerland", dial_code: "+41" },
+        { name: "Austria", dial_code: "+43" },
+        { name: "Canada", dial_code: "+1" },
+        { name: "Australia", dial_code: "+61" },
+        { name: "Japan", dial_code: "+81" },
+        { name: "China", dial_code: "+86" },
+        { name: "India", dial_code: "+91" },
+        { name: "Brazil", dial_code: "+55" },
+        { name: "Mexico", dial_code: "+52" },
+        { name: "Saudi Arabia", dial_code: "+966" },
+        { name: "Turkey", dial_code: "+90" }
+    ] %>
+    <div class="card o-hidden border-0 shadow-lg borderNone">
+        <div class="card-body p-0">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="registerFormPadding">
+                        <div class="text-center">
+                            <h1 class="textRegisterAccount mb-2">Edit your account!</h1>
+                        </div>
+                        <%= form_for(@user, url: user_path(@user), method: :patch) do |f| %>
+                        <% if @user.errors.any? %>
+                        <div class="alert alert-danger">
+                            <ul>
+                                <% @user.errors.full_messages.each do |message| %>
+                                <li><%= message %></li>
+                                <% end %>
+                            </ul>
+                        </div>
+                        <% end %>
+
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <%= f.label :first_name, "" , class:"" do %>
+                                <span class="firstNameRegist">First Name</span>
+                                <span class="text-danger">*</span>
+                                <% end %>
+                                <%= f.text_field :first_name, required: true, class: "form-control", placeholder: "Enter your first name" %>
+                            </div>
+                            <div class="col-md-6">
+                                <%= f.label :last_name, "" , class:"" do %>
+                                <span class="firstNameRegist">Last Name</span>
+                                <span class="text-danger">*</span>
+                                <% end %>
+                                <%= f.text_field :last_name, required: true, class: "form-control", placeholder: "Enter your last name" %>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <%= f.label :company_name, "Company Name" , class:"firstNameRegist" %>
+                                <%= f.text_field :company_name, class: "form-control", placeholder: "Enter your company name" %>
+                            </div>
+                            <div class="col-md-6">
+                                <%= f.label :website, "" , class:"" do %>
+                                <span class="firstNameRegist">Website</span>
+                                <span class="text-danger">*</span>
+                                <% end %>
+                                <%= f.text_field :website, class: "form-control", placeholder: "Enter your website",  required: true %>
+                                <small class="text-muted"><i>Must be a valid URL</i></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <%= f.label :country_code, "" , class:"" do %>
+                                <span class="firstNameRegist">Country Code</span>
+                                <span class="text-danger">*</span>
+                                <% end %>
+                                <%= f.select :country_code, country_codes.map { |country| ["#{country[:name]} (#{country[:dial_code]})", country[:dial_code]] }, class: 'form-select' %>
+
+                                <small class="text-muted"><i>e.g., +971</i></small>
+                            </div>
+
+                            <div class="col-md-3">
+                                <%= f.label :phone_number, "" , class:"" do %>
+                                <span class="firstNameRegist">Phone Number</span>
+                                <span class="text-danger">*</span>
+                                <% end %> <%= f.text_field :phone_number, class: "form-control", placeholder: "Enter your phone number" %>
+
+                                <small class="text-muted"><i>e.g., 9067816546</i></small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <%= f.label :address, "Address" ,  class:"firstNameRegist"%>
+                                <%= f.text_field :address, class: "form-control", placeholder: "Enter your address" %>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <%= f.label :password, "New Password",  class:"firstNameRegist" %>
+                                <%= f.password_field :password, class: "form-control", placeholder: "Enter a new password" %>
+                            </div>
+                            <div class="col-md-6">
+                                <%= f.label :password_confirmation, "Confirm Password",  class:"firstNameRegist" %>
+                                <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm your password" %>
+                            </div>
+                            <small class="text-muted"><i>Leave blank if you do not want to change your password</i></small>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-6">
+
+                                <%= f.label :license, "Upload your License (PDF)",  class:"firstNameRegist" %>
+                                <%= f.file_field :license, class: "form-control", accept: "application/pdf" %>
+
+                                <small class="text-muted"><i>License must be a valid PDF</i></small>
+                                <div class="d-flex justify-content-between mt-2 text-wrap-class">
+                                    <% if @user.license.attached? %>
+                                        <small class="text-muted"><i>Current License: <%= @user.license.filename %></i></small>
+                                        <small class="text-muted"><i> <%= link_to "View License", url_for(@user.license), target: "_blank", class: "btn btn-sm btn-outline-primary ml-2" %> </i></small>
+                                    <% else %>
+                                        <small class="text-muted"><i>No license uploaded</i></small>
+                                    <% end %>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <%= f.label :profile_image, "Upload your Logo ",  class:"firstNameRegist" %>
+                                <%= f.file_field :profile_image, class: "form-control", id: "imageInput", accept: "image/png, image/jpeg, image/jpg" %>
+
+                                <small class="text-muted"><i>Logo must be a valid image file (PNG, JPG, or JPEG). Any size accepted.</i></small>
+                                <div class="d-flex justify-content-between mt-2 text-wrap-class">
+                                    <% if @user.profile_image.attached? %>
+                                        <small class="text-muted"><i>Current Logo: <%= @user.profile_image.filename %></i></small>
+                                        <small class="text-muted"><i> <%= link_to "View Logo", url_for(@user.profile_image), target: "_blank", class: "btn btn-sm btn-outline-primary ml-2" %> </i></small>
+                                    <% else %>
+                                        <small class="text-muted"><i>No logo uploaded</i></small>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center mt-4 pt-4 d-flex justify-content-end gap-3">
+                            <%= f.submit "Update Information", class: "btn setBtnStats", id: "submitButton" %>
+                             <a href="/" class="btn setBtnStats"> Cancel </a>
+                        </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#user_country_code').addClass('form-select');
+        const maxSizeInMB = 10; // Increased from 5MB to 10MB
+        
+      $('#imageInput').on('change', function () {
+        const file = this.files[0];
+        const $message = $('#message');
+        const $submitButton = $('#submitButton');
+
+        if (file) {
+          if (file.size > maxSizeInMB * 1024 * 1024) {
+            $message.text(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+            toastr.error(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+            $submitButton.prop('disabled', true);
+            $('#imageInput').val('')
+            return;
+          }
+          
+          // Validate file type
+          const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+          if (!allowedTypes.includes(file.type)) {
+            $message.text('Please upload a valid image file (PNG, JPG, or JPEG).');
+            toastr.error('Please upload a valid image file (PNG, JPG, or JPEG).');
+            $submitButton.prop('disabled', true);
+            $('#imageInput').val('')
+            return;
+          }
+          
+          // File is valid
+          $message.text('Logo uploaded successfully!');
+          toastr.success('Logo uploaded successfully!');
+          $submitButton.prop('disabled', false);
+        } else {
+          $message.text('');
+          $submitButton.prop('disabled', false);
+        }
+      });
+    });
+</script>

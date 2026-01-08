@@ -1,0 +1,171 @@
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lalezar&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+<div class="bgChangeRegister bgImgLogin">
+    <% country_codes = [
+        { name: "United Arab Emirates", dial_code: "+971" },
+        { name: "United States", dial_code: "+1" },
+        { name: "United Kingdom", dial_code: "+44" },
+        { name: "Germany", dial_code: "+49" },
+        { name: "France", dial_code: "+33" },
+        { name: "Italy", dial_code: "+39" },
+        { name: "Spain", dial_code: "+34" },
+        { name: "Netherlands", dial_code: "+31" },
+        { name: "Belgium", dial_code: "+32" },
+        { name: "Switzerland", dial_code: "+41" },
+        { name: "Austria", dial_code: "+43" },
+        { name: "Canada", dial_code: "+1" },
+        { name: "Australia", dial_code: "+61" },
+        { name: "Japan", dial_code: "+81" },
+        { name: "China", dial_code: "+86" },
+        { name: "India", dial_code: "+91" },
+        { name: "Brazil", dial_code: "+55" },
+        { name: "Mexico", dial_code: "+52" },
+        { name: "Saudi Arabia", dial_code: "+966" },
+        { name: "Turkey", dial_code: "+90" }
+    ] %>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="registerFormPadding">
+                            <div class="text-center">
+                                <h1 class="textRegisterAccount mb-2">Register your account!</h1>
+                                <p class="descRegist mb-4">Please enter your account details and submit your account for approval </p>
+                            </div>
+                            <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+                            <%= render "devise/shared/error_messages", resource: resource %>
+                            <% if flash[:alert] %>
+                            <div class="alert alert-danger">
+                                <%= flash[:alert] %>
+                            </div>
+                            <% end %>
+
+                            <%= hidden_field_tag :token, params[:token] %>
+                            <div class="form-group row inputsMargin">
+                                <div class="col-sm-6 inputsMargin">
+                                    <div class="mb-2 firstNameRegist">First Name<span class="text-danger">*</span></div>
+                                    <%= f.text_field :first_name, required: true, class: "form-control firstNameRegistInput", placeholder: "Enter your First name" %>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-2 firstNameRegist">Last Name<span class="text-danger">*</span></div>
+                                    <%= f.text_field :last_name, required: true, class: "form-control firstNameRegistInput", placeholder: "Enter your Last name" %>
+                                </div>
+                            </div>
+                            <div class="form-group row inputsMargin">
+                                <div class="col-sm-6 inputsMargin">
+                                    <div class="mb-2 firstNameRegist">Email Address<span class="text-danger">*</span></div>
+                                    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control firstNameRegistInput", placeholder: "esteban_schiller@gmail.com" %>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-2 firstNameRegist">Password<span class="text-danger">*</span></div>
+                                    <%= f.password_field :password, autocomplete: "new-password", class: "form-control firstNameRegistInput", placeholder: "Password here" %>
+                                    <% if @minimum_password_length %>
+                                    <small class="text-muted d-block mb-1">(<%= @minimum_password_length %> characters minimum)</small>
+                                    <% end %>
+                                </div>
+                            </div>
+
+                            <!-- Company Name & Website -->
+                            <div class="form-group row inputsMargin">
+                                <div class="col-sm-6 inputsMargin">
+                                    <div class="mb-2 firstNameRegist">Company Name<span class="text-danger">*</span></div>
+                                    <%= f.text_field :company_name, maxlength: 50, class: "form-control firstNameRegistInput", placeholder: "Enter your company" %>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-2 firstNameRegist">Website<span class="text-danger">*</span></div>
+                                    <%= f.text_field :website, class: "form-control firstNameRegistInput", placeholder: "Enter your website", required: true %>
+                                    <small class="text-muted"><i>Must be a valid URL</i></small>
+                                </div>
+                            </div>
+
+                            <!-- Phone & License Number -->
+                            <div class="form-group row inputsMargin">
+                                <div class="col-sm-3 inputsMargin">
+                                    <div class="mb-2 firstNameRegist">Country Code<span class="text-danger">*</span> </div>
+                                    <%= f.select :country_code, 
+                                    country_codes.map { |country| ["#{country[:name]} (#{country[:dial_code]})", country[:dial_code]] }, 
+                                    { prompt: "Select a country" }, 
+                                    { class: 'form-select s-p' } 
+                                %>
+                                </div>
+                                <div class="col-sm-3 inputsMargin">
+                                    <div class="mb-2 firstNameRegist">Phone Number <span class="text-danger">*</span></div>
+                                    <%= f.number_field :phone_number, class: "form-control firstNameRegistInput", placeholder: "Enter your phone", pattern: "\\+?[0-9]{7,15}", title: "Enter a valid phone number" %>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-2 firstNameRegist">License Number</div>
+                                    <%= f.text_field :license_number, class: "form-control firstNameRegistInput", placeholder: "Enter your license number" %>
+                                </div>
+                            </div>
+
+
+                            <!-- Address -->
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 inputsMargin">
+                                    <div class="mb-2 firstNameRegist">Address<span class="text-danger">*</span></div>
+                                    <%= f.text_field :address, class: "form-control firstNameRegistInput", placeholder: "Enter your address" %>
+                                </div>
+                                <div class="col-sm-6 inputsMargin">
+
+                                    <div class="mb-2 firstNameRegist">Upload your License<span class="text-danger">*</span></div>
+
+                                    <%= f.file_field :license, class: "form-control", accept: "application/pdf" %>
+                                    <small class="text-muted"><i>License must be a valid PDF</i></small>
+                                </div>
+                            </div>
+                            <!-- Submit Button -->
+                            <div class="d-flex justify-content-center">
+                                <%= f.submit "Send For Approval", class: "btn btn-primary p-3 approvalbtnColor" %>
+                            </div>
+                            <% end %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const maxSizeInMB = 10; // Increased from 5MB to 10MB
+        
+        $('#imageInput').on('change', function() {
+            const file = this.files[0];
+            const $message = $('#message');
+            const $submitButton = $('#submitButton');
+
+            if (file) {
+                if (file.size > maxSizeInMB * 1024 * 1024) {
+                    $message.text(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+                    toastr.error(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+                    $submitButton.prop('disabled', true);
+                    $('#imageInput').val('')
+                    return;
+                }
+                
+                // Validate file type
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                if (!allowedTypes.includes(file.type)) {
+                    $message.text('Please upload a valid image file (PNG, JPG, or JPEG).');
+                    toastr.error('Please upload a valid image file (PNG, JPG, or JPEG).');
+                    $submitButton.prop('disabled', true);
+                    $('#imageInput').val('')
+                    return;
+                }
+                
+                // File is valid
+                $message.text('Logo uploaded successfully!');
+                toastr.success('Logo uploaded successfully!');
+                $submitButton.prop('disabled', false);
+            } else {
+                $message.text('');
+                $submitButton.prop('disabled', false);
+            }
+        });
+    });
+</script>

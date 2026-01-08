@@ -1,0 +1,192 @@
+ <div class="cartContainer">
+
+     <div id="cart-data">
+         <% if @cart.present? && @cart.cart_items.present? %>
+         <div class="row align-items-center">
+             <div class="notice col-9">
+                 <h3>Important Notice:</h3>
+             Items in your cart will be reserved for 15 minutes. After this period, they will be released back into stock, and you will need to reselect your products.</div>
+
+         </div>
+         <div class="table-responsive ">
+             <table class="table setRecentOrderTble text-center mt-5 mobile-table" id="cart-table">
+                 <thead class="tHeadBgColor">
+                     <tr>
+                         <th>Number</th>
+                         <th>Description</th>
+                         <th>Stock Available</th>
+                         <th>Quantity</th>
+                         <th>Base Cost</th>
+                         <th>Total Cost</th>
+                         <th></th>
+                         <th></th>
+                     </tr>
+                 </thead>
+                 <tbody class="setFontCartTable">
+                     <% total_price = 0 %>
+                     <% @cart.cart_items.each.with_index do |cart_item, index| %>
+                     <input type="hidden" name="order_id" id="buyer_id" value="<%=current_user.id %>">
+
+
+                     <tr id="cart-item-<%= cart_item.id %>" class="setBorderBottomTr">
+                         <td><%= index +1  %></td>
+                         <td><%= cart_item.product.name %> (<%= cart_item.product.sku %>,<%= cart_item.product.variant %> )</td>
+                         <td id="<%= cart_item.inventory.id %>-stock"><%= cart_item.inventory.stock_quantity %></td>
+                         <td class="d-flex align-items-center justify-content-center">
+                             <%= image_tag('minus_box.svg', alt: 'Search', class: "btn", onclick:"minus(#{cart_item.inventory.id}, #{cart_item.id} )") %>
+                             <input class="m-0 p-0 quantity-input" min="1" value="<%= cart_item.quantity %>" id="<%= cart_item.inventory.id %>-quantity" data-product-id="<%= cart_item.product.id %>" data-price="<%= cart_item.inventory.price %>" data-quantity="<%= cart_item.quantity %>" data-inventory="<%= cart_item.inventory_id %>" onchange="cartInputChange(event, <%=cart_item.id %>)" readonly disabled>
+                             <%= image_tag('add_box.svg', alt: 'Search', class: "btn", onclick:"plus(#{cart_item.inventory.id}, #{cart_item.id} )") %>
+
+                         </td>
+                         <td id="<%= cart_item.inventory.id%>-base-price"> <%= number_to_currency(cart_item.inventory.price , precision: 0) %></td>
+                         <td id="<%= cart_item.inventory.id%>-total-price" class="total-price"><%=number_to_currency(cart_item.inventory.price * cart_item.quantity, precision: 0) %></td>
+                         <% total_price += cart_item.inventory.price * cart_item.quantity %>
+                         <td>
+                             <button type="submit" class="search-button" onclick="deleteItem(<%= cart_item.id %>)" data-toggle="tooltip" data-placement="bottom" title="Delete Item">
+                                 <%= image_tag('bin.svg', alt: 'Search', class: 'search-icon') %>
+                             </button>
+                         </td>
+                         <td>
+                             <div class="timer" data-updated-at="<%= cart_item.updated_at.to_i * 1000 %>" data-id="<%= cart_item.id %>" data-toggle="tooltip" data-placement="bottom" title="This item will be delete after this countdown">
+                                 15:00
+                             </div>
+         </div>
+         </td>
+         <% end %>
+         <tr class="totalTextSet">
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td id="total-cart-price">Total = <%=  number_to_currency(total_price, precision: 0)%> </td>
+         </tr>
+         </tbody>
+         </table>
+     </div>
+
+     <div class="d-flex align-items-center justify-content-end mt-5 gap-3">
+     <div>
+         <select id="forwarder" class="form-select  py-3">
+             <option value="" disabled selected>Select a forwarder</option>
+             <% @forwarders.each do |forwarder| %>
+                 <option value="<%= forwarder.name %>"><%= forwarder.name %></option>
+             <% end %>
+         </select>
+         </div>
+         <button type="submit" class="btn submitBtnCart btn-primary mr-5" id="open-warning">
+             Checkout
+         </button>
+     </div>
+ </div>
+ <% else %>
+ <div class="d-flex justify-content-center align-items-center">
+     <h2 class="text-center"> No cart Items present </h2>
+ </div>
+ <% end%>
+ </div>
+ <div class="modal fade" id="warning" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+         <div class="modal-content">
+             <div class="modal-body">
+             <div id="warning-content">
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="float: right !important;"></button>
+
+                 <h2 class="text-center mt-3 text-color">
+                     <svg width="25" height="25" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M1.22489 20C0.171672 20 -0.292613 19.2188 0.192256 18.2642L9.11717 0.715969C9.60204 -0.238657 10.3968 -0.238657 10.8822 0.715969L19.8072 18.2642C20.2932 19.2188 19.8283 20 18.7745 20H1.22489Z" fill="#FFCC4D" />
+                         <path d="M8.72411 5.78862C8.72411 5.02842 9.27359 4.55782 10.0003 4.55782C10.7099 4.55782 11.2771 5.04652 11.2771 5.78862V12.7588C11.2771 13.5009 10.7099 13.9896 10.0003 13.9896C9.27359 13.9896 8.72411 13.5185 8.72411 12.7588V5.78862ZM8.61719 16.4693C8.61779 16.095 8.76373 15.7362 9.023 15.4715C9.28227 15.2069 9.63373 15.058 10.0003 15.0575C10.3669 15.058 10.7184 15.2069 10.9776 15.4715C11.2369 15.7362 11.3829 16.095 11.3835 16.4693C11.383 16.8438 11.2371 17.2028 10.9778 17.4675C10.7186 17.7323 10.367 17.8813 10.0003 17.8817C9.63363 17.8813 9.28209 17.7323 9.0228 17.4675C8.76351 17.2028 8.61764 16.8438 8.61719 16.4693Z" fill="#231F20" />
+                     </svg>
+                     Warning
+                 </h2>
+                 <p class="text-center text-color">
+                     Clicking the <strong>"Confirm"</strong> button finalizes your order, and no further changes can be made.
+                 </p>
+
+                    <div class="d-flex justify-content-center">
+                        <button name="button" type="button" class="mx-2 btn btn-outline-dark mt-3 edit-icon-cancel" onclick="cancel()">Cancel</button>
+                        <button name="button" type="button" class=" mx-2 btn btn-dark mt-3 edit-icon-cancel" onclick="proceed()">Confirm</button>
+                    </div>
+                 </div>
+                 <div class="d-none justify-content-center align-item-center " id="loader">
+                     <div class="circle-container">
+                         <div class="animated-circle one"></div>
+                         <div class="animated-circle two"></div>
+                         <div class="animated-circle three"></div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+ <div class="modal fade" id="success-message" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered modal " role="document">
+         <div class="modal-content">
+             <div class="">
+                 <div class="bgSuccessMsg">
+                     <div class="bgMainSuccess">
+                         <div class="d-flex align-items-center flex-column justify-content-between successContentFlex">
+                             <%= image_tag('checkmark-circle-2 1.svg', alt: 'Search') %>
+
+                             <div class="d-flex flex-column align-items-center succesTextFont">
+                                 SUCCESS!
+                                 <p>
+                                     Your order has been submited
+                                 </p>
+                             </div>
+                             <a href="/products-list" class="btn btn-primary btnContinueSuccess">
+                                 Continue
+                             </a>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
+
+ <script>
+     $(document).ready(function() {
+         const timers = $('.timer');
+
+         function updateTimers() {
+             timers.each(function() {
+                 const timerElement = $(this);
+                 const cartId = timerElement.data('id');
+                 const cartItemElement = $(`#cart-item-${cartId}`);
+                 
+                 // Only process if the cart item still exists on the page
+                 if (cartItemElement.length > 0) {
+                     const createdAt = parseInt(timerElement.data('updated-at')); // Milliseconds
+                     const expiryTime = createdAt + 15 * 60 * 1000; // Add 15 minutes
+                     const currentTime = new Date().getTime();
+                     const remainingTime = expiryTime - currentTime;
+
+                     if (remainingTime <= 0) {
+                         timerElement.text('00:00');
+                         // Delete the expired item
+                         deleteItem(cartId);
+                     } else {
+                         const minutes = Math.floor(remainingTime / 1000 / 60);
+                         const seconds = Math.floor((remainingTime / 1000) % 60);
+                         timerElement.text(
+                             `${minutes.toString().padStart(2, '0')}:${seconds
+                                 .toString()
+                                 .padStart(2, '0')}`
+                         );
+                     }
+                 }
+             });
+         }
+
+         // Update all timers every second
+         setInterval(updateTimers, 1000);
+         updateTimers(); // Call immediately to show initial times
+         
+         // Initial calculation of total price
+         calculateTotalPrice();
+     });
+ </script>
+
+<%= javascript_include_tag 'cart' %>

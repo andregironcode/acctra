@@ -1,0 +1,11 @@
+<!-- app/views/invitation_mailer/invite_user.html.erb -->
+<h1>You’re Invited to Join Our Platform</h1>
+<p>
+  Click the link below to complete your registration as a <%= @invitation.role.capitalize %>:
+</p>
+<p>
+  <%= link_to 'Complete Registration', @registration_url %>
+</p>
+<p>
+  This link will expire in 24 hours.
+</p>

@@ -1,0 +1,2 @@
+$('#inventories-list').html('<%= j render partial: "inventories", locals: { inventories: @product_inventories } %>');
+$('#pagination').html('<%= j paginate(@product_inventories) %>');

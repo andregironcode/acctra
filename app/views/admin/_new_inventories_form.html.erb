@@ -1,0 +1,500 @@
+<div class="container">
+    <%= form_tag(@inventory.persisted? ? admin_inventory_path(@inventory) : '/admin/inventories', 
+               method: @inventory.persisted? ? :put : :post, 
+               class: 'formtastic product', 
+               novalidate: true) do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+    <fieldset class="form-group">
+        <% if @inventory.errors.any? %>
+        <div class="alert alert-danger">
+            <ul>
+                <% @inventory.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <%= label_tag '', "Brand", class: 'control-label' %>
+                <%= select_tag :brand_id, options_from_collection_for_select(Brand.all, :id, :name), prompt: 'Select Brand', class: 'form-select', id: 'admin_brand_select' %>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12 d-none" id="device_div">
+                <%= label_tag '', "Device", class: 'control-label' %>
+                <select id="inventory_device" name="" class="form-select">
+                    <option value=""> Select Device</option>
+                </select>
+            </div>
+            <p style="display: none" id="no-device"> No Device Found in this Brand</p>
+
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12 d-none" id="category_div">
+                <%= label_tag '', "Model", class: 'control-label' %>
+                <select id="inventory_category" class="form-select">
+                    <option> Select Model </option>
+                </select>
+            </div>
+            <p style="display: none" id="no-cat"> No Model Found in this Device</p>
+
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group col-md-12 d-none" id="country_div">
+                <%= label_tag '', "Country", class: 'control-label' %>
+                <select id="inventory_country" class="form-select">
+                    <option> Select Country </option>
+                </select>
+            </div>
+            <p style="display: none" id="no-country"> No Country Found in this Device</p>
+
+        </div>
+
+        <div class="form-row ">
+            <div class="form-group col-md-12 d-none" id="products_div">
+                <%= label_tag '', "Product", class: 'control-label' %>
+                <select id="inventory_products" class="form-select" name="inventory[product_id]" required>
+                    <option> Select Product </option>
+                </select>
+                <% if @inventory.errors[:product_id].any? %>
+                <div class="text-danger">
+                    <%= @inventory.errors[:product_id].join(', ') %>
+                </div>
+                <% end %>
+
+            </div>
+        </div>
+        <div class="d-none" id="stock-price">
+
+
+            <div class="form-row">
+                <div class="form-group col-md-12 " id="">
+
+                    <%= label_tag 'inventory[seller_id]', "Seller", class: 'control-label' %>
+                    <%= select_tag 'inventory[seller_id]', options_for_select(User.all.map { |user| ["#{user.first_name} #{user.last_name} (#{user.email})", user.id] }, @inventory.seller_id), class: 'form-select', required: true %>
+                    <% if @inventory.errors[:seller_id].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:seller_id].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+            <div class="form-row ">
+                <div class="form-group col-md-12 " id="">
+                    <%= label_tag '', "Stock Quantity", class: 'control-label' %>
+                    <%= number_field_tag 'inventory[stock_quantity]', nil, min: 0, class: 'form-control', required: true %>
+
+                    <% if @inventory.errors[:stock_quantity].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:stock_quantity].join(', ') %>
+                    </div>
+                    <% end %>
+
+                </div>
+            </div>
+
+            <div class="form-row ">
+                <div class="form-group col-md-12" id="">
+                    <%= label_tag '', "Price", class: 'control-label' %>
+                    <%= number_field_tag 'inventory[price]', nil, step: 1, class: 'form-control', required: true %>
+                    <i> Price in US dollars </i>
+                    <% if @inventory.errors[:price].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:price].join(', ') %>
+                    </div>
+                    <% end %>
+
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group col-md-2 d-flex">
+                    <%= submit_tag 'Create Stock', class: 'btn btn-primary py-2 mr-2' %>
+                    <%= link_to 'Cancel', '/admin/inventories', class: 'btn btn-secondary' %>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <% end %>
+</div>
+
+<script>
+    const countries = {
+        "AF": "Afghanistan",
+        "AL": "Albania",
+        "DZ": "Algeria",
+        "AD": "Andorra",
+        "AO": "Angola",
+        "AR": "Argentina",
+        "AM": "Armenia",
+        "AU": "Australia",
+        "AT": "Austria",
+        "AZ": "Azerbaijan",
+        "BS": "Bahamas",
+        "BH": "Bahrain",
+        "BD": "Bangladesh",
+        "BB": "Barbados",
+        "BY": "Belarus",
+        "BE": "Belgium",
+        "BZ": "Belize",
+        "BJ": "Benin",
+        "BT": "Bhutan",
+        "BO": "Bolivia",
+        "BA": "Bosnia and Herzegovina",
+        "BW": "Botswana",
+        "BR": "Brazil",
+        "BN": "Brunei",
+        "BG": "Bulgaria",
+        "BF": "Burkina Faso",
+        "BI": "Burundi",
+        "KH": "Cambodia",
+        "CM": "Cameroon",
+        "CA": "Canada",
+        "CV": "Cape Verde",
+        "CF": "Central African Republic",
+        "TD": "Chad",
+        "CL": "Chile",
+        "CN": "China",
+        "CO": "Colombia",
+        "KM": "Comoros",
+        "CG": "Congo",
+        "CD": "Democratic Republic of the Congo",
+        "CR": "Costa Rica",
+        "CI": "Côte d'Ivoire",
+        "HR": "Croatia",
+        "CU": "Cuba",
+        "CY": "Cyprus",
+        "CZ": "Czech Republic",
+        "DK": "Denmark",
+        "DJ": "Djibouti",
+        "DO": "Dominican Republic",
+        "EC": "Ecuador",
+        "EG": "Egypt",
+        "SV": "El Salvador",
+        "GQ": "Equatorial Guinea",
+        "ER": "Eritrea",
+        "EE": "Estonia",
+        "ET": "Ethiopia",
+        "FJ": "Fiji",
+        "FI": "Finland",
+        "FR": "France",
+        "GA": "Gabon",
+        "GM": "Gambia",
+        "GE": "Georgia",
+        "DE": "Germany",
+        "GH": "Ghana",
+        "GR": "Greece",
+        "GT": "Guatemala",
+        "GN": "Guinea",
+        "GY": "Guyana",
+        "HT": "Haiti",
+        "HN": "Honduras",
+        "HU": "Hungary",
+        "IS": "Iceland",
+        "IN": "India",
+        "ID": "Indonesia",
+        "IR": "Iran",
+        "IQ": "Iraq",
+        "IE": "Ireland",
+        "IL": "Israel",
+        "IT": "Italy",
+        "JM": "Jamaica",
+        "JP": "Japan",
+        "JO": "Jordan",
+        "KZ": "Kazakhstan",
+        "KE": "Kenya",
+        "KR": "South Korea",
+        "KW": "Kuwait",
+        "LA": "Laos",
+        "LV": "Latvia",
+        "LB": "Lebanon",
+        "LY": "Libya",
+        "LT": "Lithuania",
+        "LU": "Luxembourg",
+        "MG": "Madagascar",
+        "MW": "Malawi",
+        "MY": "Malaysia",
+        "MV": "Maldives",
+        "ML": "Mali",
+        "MT": "Malta",
+        "MX": "Mexico",
+        "MC": "Monaco",
+        "MN": "Mongolia",
+        "ME": "Montenegro",
+        "MA": "Morocco",
+        "MZ": "Mozambique",
+        "MM": "Myanmar",
+        "NA": "Namibia",
+        "NP": "Nepal",
+        "NL": "Netherlands",
+        "NZ": "New Zealand",
+        "NI": "Nicaragua",
+        "NE": "Niger",
+        "NG": "Nigeria",
+        "NO": "Norway",
+        "OM": "Oman",
+        "PK": "Pakistan",
+        "PA": "Panama",
+        "PY": "Paraguay",
+        "PE": "Peru",
+        "PH": "Philippines",
+        "PL": "Poland",
+        "PT": "Portugal",
+        "QA": "Qatar",
+        "RO": "Romania",
+        "RU": "Russia",
+        "RW": "Rwanda",
+        "SA": "Saudi Arabia",
+        "SN": "Senegal",
+        "RS": "Serbia",
+        "SG": "Singapore",
+        "SK": "Slovakia",
+        "SI": "Slovenia",
+        "SO": "Somalia",
+        "ZA": "South Africa",
+        "ES": "Spain",
+        "LK": "Sri Lanka",
+        "SD": "Sudan",
+        "SE": "Sweden",
+        "CH": "Switzerland",
+        "SY": "Syria",
+        "TW": "Taiwan",
+        "TJ": "Tajikistan",
+        "TZ": "Tanzania",
+        "TH": "Thailand",
+        "TG": "Togo",
+        "TN": "Tunisia",
+        "TR": "Turkey",
+        "TM": "Turkmenistan",
+        "UG": "Uganda",
+        "UA": "Ukraine",
+        "AE": "United Arab Emirates",
+        "GB": "United Kingdom",
+        "US": "United States",
+        "UY": "Uruguay",
+        "UZ": "Uzbekistan",
+        "VE": "Venezuela",
+        "VN": "Vietnam",
+        "YE": "Yemen",
+        "ZM": "Zambia",
+        "ZW": "Zimbabwe",
+        "Europe": "Europe"
+    }
+    $('#admin_brand_select').on('change', function() {
+        var brandId = $(this).val();
+        if (brandId === "" || brandId === undefined) {
+            $('#device_div').css('display', 'none');
+
+        } else {
+            $.ajax({
+                url: '/admin/inventories/devices',
+                method: 'GET',
+                data: {
+                    brand_id: brandId
+                },
+                success: function(data) {
+                    $('#category_div').addClass('d-none').removeClass('d-block');
+                    $('#country_div').addClass('d-none').removeClass('d-block');
+                    $('#products_div').addClass('d-none').removeClass('d-block');
+                    $('#stock-price').addClass('d-none').removeClass('d-block');
+
+
+                    var deviceDropDown = $('#inventory_device');
+                    deviceDropDown.html('')
+                    if (data.length > 0) {
+                        $('#device_div').addClass('d-block').removeClass('d-none');
+                        var selectDevice = `<option>Select Device</option>`;
+                        deviceDropDown.append(selectDevice)
+                        $.each(data, function(index, device) {
+                            var deviceExists = deviceDropDown.find(`option:contains(${device.name})`).length > 0;
+                            if (!deviceExists) {
+
+                                var devices = `<option value="${device.id}">${device.name}</option>`;
+                                deviceDropDown.append(devices);
+                            }
+                        });
+                        $('#no-device').css('display', 'none');
+                    } else {
+
+                        $('#device_div').addClass('d-none').removeClass('d-block');
+                        $('#no-device').css('display', 'block');
+
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch devices:', error);
+                }
+            });
+        }
+    });
+    $('#inventory_device').on('change', function() {
+        var deviceId = $(this).val();
+
+        if (deviceId === "" || deviceId === undefined) {
+            $('#category_div').css('display', 'none');
+        } else {
+            $('#products_div').addClass('d-none').removeClass('d-block');
+            $('#stock-price').addClass('d-none').removeClass('d-block');
+            $.ajax({
+                url: '/admin/inventories/models',
+                method: 'GET',
+                data: {
+                    device_id: deviceId
+                },
+                success: function(data) {
+                    var categoryDropDown = $('#inventory_category');
+                    categoryDropDown.html('')
+                    var selectCategory = `<option>Select Model</option>`;
+                    categoryDropDown.append(selectCategory)
+                    if (data.length > 0) {
+                        $('#category_div').addClass('d-block').removeClass('d-none');
+                        $.each(data, function(index, category) {
+                            var categoryExists = categoryDropDown.find(`option[value='${category.id}']`).length > 0;
+                            if (!categoryExists) {
+                                var category = `<option value="${category.id}">${category.name}</option>`;
+                                categoryDropDown.append(category);
+                            }
+                        });
+                        $('#no-cat').css('display', 'none');
+                    } else {
+                        $('#no-cat').css('display', 'block');
+                        $('#category_div').addClass('d-none').removeClass('d-block');
+                        $('#products_div').addClass('d-none').removeClass('d-block');
+
+
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch devices:', error);
+                }
+            });
+        }
+    });
+
+
+    $('#inventory_category').on('change', function() {
+        var categoryId = $(this).val();
+        if (categoryId === "" || categoryId === undefined) {
+            $('#products_div').addClass('d-none').removeClass('d-block');
+            $('#product-form').css('display', 'none');
+            $('#product_name').val('');
+            $('#product_sku').val('');
+            $('#product_variant').val('');
+        } else {
+            $('#category_div').addClass('d-block').removeClass('d-none');
+            const deviceDiv = $('#category-div');
+            deviceDiv.addClass('d-none').removeClass('d-flex');
+            $('#products_div').addClass('d-none').removeClass('d-block');
+            $.ajax({
+                url: '/admin/inventories/countries',
+                method: 'GET',
+                data: {
+                    category_id: categoryId
+                },
+                success: function(data) {
+                    var categoryDropDown = $('#inventory_country');
+                    categoryDropDown.html('');
+                    var selectProduct = `<option>Select Country</option>`;
+                    categoryDropDown.append(selectProduct);
+
+                    if (data.length > 0) {
+                        $('#country_div').addClass('d-block').removeClass('d-none');
+
+                        $.each(data, function(index, product) {
+                            var categoryExists = categoryDropDown.find(`option:contains(${countries[product.country]})`).length > 0;
+                            if (!categoryExists) {
+                                var category = `<option data-category="${product.category_id}" value="${product.country}">${countries[product.country]}</option>`;
+                                categoryDropDown.append(category);
+                            }
+                        });
+                        $('#no-prod').css('display', 'none');
+                    } else {
+                        if (categoryDropDown.children().length === 0) {
+                            $('#no-country').text('No Country Found in this brand');
+                            $('#no-country').css('display', 'block');
+                        } else {
+                            $('#no-country').css('display', 'none');
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch products:', error);
+                }
+            });
+
+        }
+
+    });
+
+
+    $('#inventory_country').on('change', function() {
+        var selectedOption = $(this).find('option:selected'); // Get selected option
+        var country = selectedOption.val(); // Get country code
+        var categoryId = selectedOption.data('category');
+        if (country === "" || categoryId === undefined) {
+            $('#products_div').addClass('d-none').removeClass('d-block');
+            $('#product-form').css('display', 'none');
+            $('#product_name').val('');
+            $('#product_sku').val('');
+            $('#product_variant').val('');
+        } else {
+            $('#country_div').addClass('d-block').removeClass('d-none');
+            const productDiv = $('#products_div');
+            productDiv.addClass('d-none').removeClass('d-flex');
+            $('#products_div').addClass('d-none').removeClass('d-block');
+            $.ajax({
+                url: '/admin/inventories/products',
+                method: 'GET',
+                data: {
+                    country: country,
+                    category_id: categoryId
+                },
+                success: function(data) {
+                    var categoryDropDown = $('#inventory_products');
+                    categoryDropDown.html('');
+                    var selectProduct = `<option>Select Product</option>`;
+                    categoryDropDown.append(selectProduct);
+
+                    if (data.length > 0) {
+
+                        $('#products_div').addClass('d-block').removeClass('d-none');
+
+                        $.each(data, function(index, product) {
+                            var categoryExists = categoryDropDown.find(`option:contains(${product.sku})`).length > 0;
+                            if (!categoryExists) {
+                                var category = `<option value="${product.id}">${product.name}-${product.variant} (${product.sku})</option>`;
+                                categoryDropDown.append(category);
+                            }
+                        });
+                        $('#no-prod').css('display', 'none');
+                    } else {
+                        if (categoryDropDown.children().length === 0) {
+                            $('#no-prod').text('No Product Found in this country');
+                            $('#no-prod').css('display', 'block');
+                        } else {
+                            $('#no-prod').css('display', 'none');
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch products:', error);
+                }
+            });
+
+        }
+
+    });
+    $('#inventory_products').on('change', function() {
+        $('#stock-price').addClass('d-block').removeClass('d-none');
+
+    })
+</script>

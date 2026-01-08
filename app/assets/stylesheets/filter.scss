@@ -1,0 +1,87 @@
+.dropdown-toggle::after {
+    border-top: 0;
+    margin: 0;
+}
+
+.setGapDrpDown {
+    gap: 20px;
+    border: none;
+    box-shadow: none !important;
+}
+
+.filterSetBorderRight {
+    border: 0.02px solid #d5d5d5 !important;
+    background-color: #f8f9fc !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    font-family: "Nunito Sans" !important;
+    color: rgba(32, 34, 36, 1) !important;
+}
+
+.filterBarTextFont {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-family: "Nunito Sans" !important;
+    color: black !important;
+}
+
+.restfilterTextFont {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: "Nunito Sans";
+    color: rgba(234, 2, 52, 1);
+}
+
+.pdngFilterimg {
+    height: 4rem;
+    width: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdngFilterText {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setHeightWidth {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setHeightWidthOrder {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setHeightWidthOrderFilter {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bordrFilterBar {
+    border-radius: 15px !important;
+}
+
+@media screen and (max-width:940px) {
+    .pdngFilterimg {
+        width: 2rem;
+    }
+}
+
+.filter-radius-right {
+    border-radius: 15px 0 0 15px !important;
+}
+
+.filter-radius-left {
+    border-radius: 0 15px 15px 0 !important;
+}

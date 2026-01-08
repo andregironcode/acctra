@@ -1,0 +1,31 @@
+
+ <% if flash[:notice].present? %>
+      <div class="alert alert-success text-center alert-dismissible fade show" role="alert">
+        <%= flash[:notice] %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+
+    <% if flash[:errors].present? %>
+      <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+        <%= flash[:errors] %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+    
+<div class="container mt-5">
+  <div class="card shadow-sm p-4" style="max-width: 400px; margin: auto;">
+    <%= form_with url: send_otp_path, method: :post, local: true, html: { class: "needs-validation", novalidate: true } do |f| %>
+      <div class="mb-3">
+        <%= f.label :email, "Enter your email", class: "form-label" %>
+        <%= f.email_field :email, class: "form-control", placeholder: "name@example.com", required: true %>
+        <div class="invalid-feedback">
+          Please enter a valid email address.
+        </div>
+      </div>
+      <div class="d-grid">
+        <%= f.submit "Submit", class: "btn btn-primary btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>

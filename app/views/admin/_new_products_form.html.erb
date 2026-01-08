@@ -1,0 +1,159 @@
+<div class="container">
+    <%= form_tag(@product.persisted? ? admin_product_path(@product) : '/admin/products', 
+               method: @product.persisted? ? :put : :post, 
+               class: 'formtastic product', 
+               ) do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+    <h1><%= @product.persisted? ? "Edit Product" : "New Product" %></h1>
+    <fieldset class="form-group">
+        <% if @product.errors.any? %>
+        <div class="alert alert-danger">
+            <ul>
+                <% @product.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+        <div class="form-row">
+
+            <div class="form-group col-md-12">
+                <%= label_tag 'product[brand_id]', "Brand", class: 'control-label' %>
+                <%= collection_select :product, :brand_id, Brand.all, :id, :name, { prompt: "Select Brand" }, class: 'form-control', required: true %>
+                <% if @product.errors[:brand_id].any? %>
+                <div class="text-danger">
+                    <%= @product.errors[:brand_id].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12" id="device_div" style="display: <%= @product.device_id.present? ? 'block' : 'none' %>;">
+                <%= label_tag '', "Device", class: 'control-label' %>
+                <select id="product_device_id" name="product[device_id]" class="form-control">
+                    <option value=""> Select Device</option>
+                    <% if @product.device_id.present? %>
+                    <option value="<%= @product.device_id %>" selected="selected">
+                        <%= @product.device.name %>
+                    </option>
+                    <% end %>
+                </select>
+            </div>
+
+
+            <p style="display: none" id="no-device"> No Device Found in this Brand</p>
+
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12" id="category_div" style="display: <%= @product.category_id.present? ? 'block' : 'none' %>">
+                <%= label_tag '', "Category", class: 'control-label' %>
+                <select id="product_category_id" class="form-control" name="product[category_id]">
+                    <option> Select Category</option>
+                    <% if @product.category_id.present? %>
+                    <option value="<%= @product.category_id %>" selected="selected">
+                        <%= @product.category.name %>
+                    </option>
+                    <% end %>
+                </select>
+            </div>
+            <p style="display: none" id="no-cat"> No Category Found in this Device</p>
+
+        </div>
+        <div id="product-form" style="display: <%= @product.persisted? ? 'block' : 'none' %>">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <%= label_tag 'product[name]', "Name", class: 'control-label' %>
+                    <%= text_field_tag 'product[name]', @product.name, class: 'form-control', required: true, placeholder: "Iphone 16 , Iphone 16 pro " %>
+                    <% if @product.errors[:name].any? %>
+                    <div class="text-danger">
+                        <%= @product.errors[:name].join(', ') %>
+                    </div>
+                    <% end %>
+
+                </div>
+                <div class="form-group col-md-6">
+                    <%= label_tag 'product[sku]', "SKU", class: 'control-label' %>
+                    <%= text_field_tag 'product[sku]', @product.sku, class: 'form-control', required: true, placeholder: "product SKU" %>
+                    <% if @product.errors[:sku].any? %>
+                    <div class="text-danger">
+                        <%= @product.errors[:sku].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <%= label_tag 'product[variant]', "Variant", class: 'control-label' %>
+                    <%= text_field_tag 'product[variant]', @product.variant, class: 'form-control', placeholder: "product variant" %>
+                    <% if @product.errors[:variant].any? %>
+                    <div class="text-danger">
+                        <%= @product.errors[:variant].join(', ') %>
+                    </div>
+                    <% end %>
+
+                </div>
+
+                <div class="form-group col-md-6">
+                    <%= label_tag 'product[country]', "Country", class: 'control-label' %>
+                    <%= select_tag 'product[country]', 
+                        options_for_select([
+                          ['Select a Country', ''],
+                          ['Europe', 'Europe'],
+                          ['United States', 'US'],
+                          ['United Kingdom', 'GB'],
+                          ['Germany', 'DE'],
+                          ['France', 'FR'],
+                          ['Italy', 'IT'],
+                          ['Spain', 'ES'],
+                          ['Netherlands', 'NL'],
+                          ['Belgium', 'BE'],
+                          ['Switzerland', 'CH'],
+                          ['Austria', 'AT'],
+                          ['Canada', 'CA'],
+                          ['Australia', 'AU'],
+                          ['Japan', 'JP'],
+                          ['China', 'CN'],
+                          ['India', 'IN'],
+                          ['Brazil', 'BR'],
+                          ['Mexico', 'MX'],
+                          ['United Arab Emirates', 'AE']
+                        ], @product.country), 
+                        { class: 'form-control' } %>
+                    <% if @product.errors[:country].any? %>
+                    <div class="text-danger">
+                        <%= @product.errors[:country].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <%= label_tag 'product[variant]', "Model Number (optional)", class: 'control-label' %>
+                    <%= text_field_tag 'product[model_number]', @product.model_number, class: 'form-control', placeholder: "Enter product model number" %>
+                    <% if @product.errors[:model_number].any? %>
+                    <div class="text-danger">
+                        <%= @product.errors[:variant].join(', ') %>
+                    </div>
+                    <% end %>
+                    <small class="text-muted"><i></i></small>
+
+                </div>
+                </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2 d-flex">
+                    <%= submit_tag @product.persisted? ? 'Update Product' : 'Create Product', 
+                         class: 'btn btn-primary py-2 mr-2' %>
+                    <%= link_to 'Cancel', '/admin/products', class: 'btn btn-secondary' %>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </fieldset>
+    <% end %>
+</div>

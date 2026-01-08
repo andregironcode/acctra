@@ -1,0 +1,308 @@
+<% months = {
+  "01" => "January", "02" => "February", "03" => "March", "04" => "April",
+  "05" => "May", "06" => "June", "07" => "July", "08" => "August",
+  "09" => "September", "10" => "October", "11" => "November", "12" => "December"
+} %>
+<div class="topSellerContainer d-none">
+<% @top_models.each do |model, sales_data| %>
+  <% sales_data.each do |data| %>
+    <% year, month = data[:month].split("-") %>
+    <% month_name = "#{months[month]} #{year}" %>
+
+    <span class="topSeller"
+          data-model="<%= model %>"
+          data-month="<%= month_name %>"
+          data-sales="<%= data[:sales] %>">
+    </span>
+  <% end %>
+<% end %>
+</div>
+<div class="d-flex mb-2 justify-content-end">
+    
+     <div class="dropdown">
+        <button class="d-flex align-items-center rounded-pill dropdown-toggle border filter-btn-round p-2 px-3" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= image_tag('filter.svg', alt: 'Search', class:'mx-2') %>
+        Filter
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu p-3" style="width: 360px;">
+            <!-- Date Picker -->
+            <div class="mb-3">
+                <label class="form-label">Date</label>
+                <div class="input-group">
+                    <input type="date" class="form-control" id="statsStartDate">
+                    <span class="input-group-text">→</span>
+                    <input type="date" class="form-control" id="statsEndDate">
+                </div>
+            </div>
+
+           
+
+            <!-- Apply Button -->
+            <div class="d-flex align-items-center justify-content-between">
+            <button class="btn btn-danger" id="resetStats">Reset</button>
+            <button class="btn btn-primary" id="statsDateFilter">Apply</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="d-flex setFlexStaticsCharts">
+    <div class="w-75 flex-column setFlexStaticsChartsWidth">
+        <div class="row justify-content-between px-3 setFlexStaticsChartsContent mobile-padding">
+            <div class="col-xl-6 chartMain setPaddingCard borderNone shadow mb-2 setHeightStatsOrdr">
+                <div class="chart-title-statics mb-3 stats-mb"><a href="/orders-list"> Total Orders </a></div>
+                <div class="orders-stats stats-statics">
+                    <div class="stats-bar seller-orders" data-value="<%= @new_orders.count %>">
+                        <a href="orders-list/?order_status=new">
+                            <div class="label-statics">New</div>
+                        </a>
+                        <div class="bar-container-statics d-flex align-items-center">
+                            <div class="bar-fill-statics bar-fill-seller"></div>
+                            <div class="dolarSet ml-1"><%= @new_orders.count %></div>
+
+                        </div>
+                    </div>
+
+                    <div class="stats-bar seller-orders" data-value="<%= @processing_orders.count %>">
+                        <a href="orders-list/?order_status=processing">
+                            <div class="label-statics">Processing</div>
+                        </a>
+                        <div class="bar-container-statics d-flex align-items-center">
+                            <div class="bar-fill-statics-proces bar-fill-seller"></div>
+                            <div class="dolarSet ml-1"><%= @processing_orders.count %></div>
+
+                        </div>
+                    </div>
+
+                    <div class="stats-bar seller-orders" data-value="<%= @completed_orders.count %>">
+                        <a href="orders-list/?order_status=completed">
+                            <div class="label-statics">Completed</div>
+                        </a>
+                        <div class="bar-container-statics d-flex align-items-center">
+                            <div class="bar-fill-statics-cmplt bar-fill-seller"></div>
+                            <div class="dolarSet ml-1"><%= @completed_orders.count %></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="axis-orders d-none">
+                    <span>0</span>
+                    <span id="firstSellerStatsValue"></span>
+                    <span id="secondSellerStatsValue"></span>
+                    <span id="thirdSellerStatsValue"></span>
+                    <span id="maxSellerStatsValue"><%= @max_orders_count %></span>
+                </div>
+
+            </div>
+            <div class="col-xl-6 chartMain borderNone shadow setPaddingCard mb-2 setHeightStatsOrdr">
+                <div class="chart-title-statics mb-3 stats-mb">Brands</div>
+                <div class="orders-stats category-sales">
+
+                    <% @sorted_category_sales.each_with_index do |category, index| %>
+
+                    <div class="category-bar categoryBar" data-value="<%= category[:sales] %>">
+                        <a href="product-inventories/?category_id=<%= category[:id] %>" data-id="<%= category[:id] %>" data-sales="<%= category[:sales] %>" id="seller-brand-stats">
+                            <div class="label-statics-category"><%= category[:name] %></div>
+                        </a>
+                        <div class="bar-container-statics-category d-flex align-items-center">
+                            <div class="bar-fill-statics-category category<%=index + 1  %> "></div>
+                            <div class="dolarSet ml-1"><%= number_to_currency(category[:sales], precision: 0)  %></div>
+                        </div>
+                    </div>
+                    <% end %>
+                </div>
+
+                <div class="axis-statics">
+                    <span>0</span>
+                    <span id="firstCatValue"></span>
+                    <span id="secondCatValue"></span>
+                    <span id="thirdCatValue"></span>
+                    <span id="maxCategoryValue"><%= number_to_currency(@max_category_sales, precision: 0) %> </span>
+                </div>
+            </div>
+        </div>
+ <div class=" shadow chart-container-seller borderNone setPaddingCard col-12">
+        <div>
+            <div class="chart-header-seller">
+                <h6 class="tdySalesTextFnt">Top Models</h5>
+            </div>
+
+            <div class="chart-wrapper-seller">
+                <canvas id="top-selling-models" style="height: 18rem; width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="col-xl-3 col-lg-12  mobile-padding new-padding">
+        <div class="card setPaddingCard borderNone shadow p-3">
+            <div class="d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 sellingProductsText">Top Selling Product</h6>
+
+            </div>
+            <hr class="sidebar-divider hrColor">
+            <div class="card-body p-0  sellerSetOverFlowStates">
+                <div class="productsSellingParent">
+                    <div id="sellers-top-products">
+                        <% top_selling_products = Product.top_selling_products(2, current_user) %>
+                        <%top_selling_products.each do |product| %>
+
+                    <a href="/products/<%= product.id%>" class="full-width-link">
+                    <div class="sellingProducts mt-4">
+                      <div class="flag_alignment d-flex gap-3">
+                        <div class="productMemory">
+                          <span class="flag flag-icon flag-icon-<%=product.country.downcase%> flag-icon-squared"></span>
+                        </div>
+                        <div class="productName">
+                          <div><%= product.name %></div>
+                          <div class="productMemory"><%= product.variant %></div>
+                        </div>
+                      </div>
+                      <div class="productPrice">
+                        <div><%= number_to_currency(product.total_sales.round, precision: 0) %></div>
+                        <div class="productSales"><%= product.total_quantity_sold%> sales</div>
+                      </div>
+                    </div>
+                  </a>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+
+    <div class="tdySalesTextFnt my-2 ml-2">
+        Today’s Sales
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-xl-4 col-md-6 mb-2 mobile-padding">
+            <a href="/orders-list?order_status=completed&date_filter=custom&sort=&start_date=<%= Time.zone.now.strftime('%Y-%m-%d') %>&end_date=<%= (Time.zone.now + 1.day).strftime('%Y-%m-%d') %>&_=<%= Time.now.to_i %>" class="text-decoration-none">
+                <div class="card h-100 borderNone boxShadowSet">
+                    <div class="card-body setPaddingCard">
+                        <div class="row no-gutters align-items-start">
+                            <div class="col orderFlex">
+                                <div class="orderText">
+                                    Total Sales
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 orderNumber"><%= number_to_currency(@todays_orders.where(status: "completed").sum(:total_amount), precision: 0)%></div>
+                                <div class="d-flex align-items-center setGap">
+                                    <%      percentage_change = Order.percentage_change_in_orders(current_user, 'sales') %>
+
+                                    <% if percentage_change >= 0%>
+                                    <%= image_tag('ic-trending-up-24px.svg', alt: 'Search') %>
+
+                                    <div class="chngeColor">
+                                        <span> <%= percentage_change.abs %>% </span>Up from yesterday
+                                    </div>
+                                    <%else%>
+                                    <%= image_tag('Path.svg', alt: 'Search') %>
+
+                                    <div class="chngeColorRed">
+                                        <span><%= percentage_change.abs %>% </span>Down from yesterday
+                                    </div>
+                                    <%end%>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <%= image_tag('Icon (4).svg', alt: 'Search') %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4 col-md-6 mb-2 mobile-padding">
+            <a href="/orders-list?order_status=&date_filter=custom&sort=&start_date=<%= Time.zone.now.strftime('%Y-%m-%d')%>&end_date=<%= (Time.zone.now + 1.day).strftime('%Y-%m-%d')%>&_=<%= Time.now.to_i %>" class="text-decoration-none">
+                <div class="card h-100 borderNone boxShadowSet">
+                    <div class="card-body setPaddingCard">
+                        <div class="row no-gutters align-items-start">
+                            <div class="col orderFlex">
+                                <div class="orderText">
+                                    Total Orders
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 orderNumber"><%= @todays_orders.count %>
+                                </div>
+                                <div class="d-flex align-items-center setGap">
+                                    <%      percentage_change = Order.percentage_change_in_orders(current_user, 'orders') %>
+
+                                    <% if percentage_change >= 0%>
+                                    <%= image_tag('ic-trending-up-24px.svg', alt: 'Search') %>
+
+                                    <div class="chngeColor">
+                                        <span> <%= percentage_change.abs %>% </span>Up from yesterday
+                                    </div>
+                                    <%else%>
+                                    <%= image_tag('Path.svg', alt: 'Search') %>
+
+                                    <div class="chngeColorRed">
+                                        <span><%= percentage_change.abs %>% </span>Down from yesterday
+                                    </div>
+                                    <%end%>
+
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <%= image_tag('graph.svg', alt: 'Search') %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4 col-md-6 mb-2 mobile-padding">
+            <a href="/orders-list?order_status=completed&date_filter=custom&sort=&start_date=<%= Time.zone.now.strftime('%Y-%m-%d') %>&end_date=<%= (Time.zone.now + 1.day).strftime('%Y-%m-%d') %>&_=<%= Time.now.to_i %>" class="text-decoration-none">
+                <div class="card h-100 borderNone boxShadowSet">
+                    <div class="card-body setPaddingCard">
+                        <div class="row no-gutters align-items-start">
+                            <div class="col orderFlex">
+                                <div class="orderText">
+                                    Complete Orders
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 orderNumber"><%= @todays_orders.where(status: "completed").count %></div>
+                                <div class="d-flex align-items-center setGap">
+                                    <%      percentage_change = Order.percentage_change_in_orders(current_user, 'completed') %>
+
+                                    <% if percentage_change >= 0%>
+                                    <%= image_tag('ic-trending-up-24px.svg', alt: 'Search') %>
+
+                                    <div class="chngeColor">
+                                        <span> <%= percentage_change.abs %>% </span>Up from yesterday
+                                    </div>
+                                    <%else%>
+                                    <%= image_tag('Path.svg', alt: 'Search') %>
+
+                                    <div class="chngeColorRed">
+                                        <span><%= percentage_change.abs %>% </span>Down from yesterday
+                                    </div>
+                                    <%end%>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <%= image_tag('Icon (5).svg', alt: 'Search') %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="SellerbrandStatsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title stats-title" id="exampleModalLabel">STATISTICS</h3>
+                <button type="button" class="btn-close-stats" id="close-stats">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>

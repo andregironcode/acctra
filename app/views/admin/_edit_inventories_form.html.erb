@@ -1,0 +1,102 @@
+
+<div class="container">
+    <%= form_tag(@inventory.persisted? ? admin_inventory_path(@inventory) : '/admin/inventories', 
+               method: @inventory.persisted? ? :put : :post, 
+               class: 'formtastic product', 
+               novalidate: true) do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+    <h1>Edit Product Inventory</h1>
+    <fieldset class="form-group">
+        <% if @inventory.errors.any? %>
+        <div class="alert alert-danger">
+            <ul>
+                <% @inventory.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+        <% end %>
+
+        <%= hidden_field_tag 'inventory[seller_id]', @inventory.seller.id, required: true %>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <%= label_tag '', "Brand", class: 'control-label' %>
+                <%= select_tag :brand_id, 
+                    options_from_collection_for_select(Brand.all, :id, :name, @inventory.product.brand_id), 
+                    prompt: 'Select Brand', 
+                    class: 'form-select', id: 'brand_select' %>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12" id="device_div">
+                <%= label_tag '', "Device", class: 'control-label' %>
+                <%= select_tag :device_id, 
+                    options_from_collection_for_select(Device.where(brand_id: @inventory.product.brand_id), :id, :name, @inventory.product.device_id), 
+                    prompt: 'Select Device', 
+                    class: 'form-select', id: 'inventory_device' %>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12" id="category_div">
+                <%= label_tag '', "Category", class: 'control-label' %>
+                <%= select_tag :category_id, 
+                    options_from_collection_for_select(Category.where(device_id: @inventory.product.device_id), :id, :name, @inventory.product.category_id), 
+                    prompt: 'Select Category', 
+                    class: 'form-select', id: 'inventory_category' %>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12" id="products_div">
+                <%= label_tag '', "Product", class: 'control-label' %>
+                <%= select_tag 'inventory[product_id]', 
+                    options_from_collection_for_select(Product.where(category_id: @inventory.product.category_id), :id, :name, @inventory.product_id), 
+                    class: 'form-select' %>
+                <% if @inventory.errors[:product_id].any? %>
+                <div class="text-danger">
+                    <%= @inventory.errors[:product_id].join(', ') %>
+                </div>
+                <% end %>
+            </div>
+        </div>
+
+        <div id="stock-price">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <%= label_tag '', "Stock Quantity", class: 'control-label' %>
+                    <%= number_field_tag 'inventory[stock_quantity]', @inventory.stock_quantity, min: 0, class: 'form-control', required: true %>
+                    <% if @inventory.errors[:stock_quantity].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:stock_quantity].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <%= label_tag '', "Price", class: 'control-label' %>
+                    <%= number_field_tag 'inventory[price]', @inventory.price, step: 1, class: 'form-control', required: true %>
+                    <i> Price in US dollars </i>
+                    <% if @inventory.errors[:price].any? %>
+                    <div class="text-danger">
+                        <%= @inventory.errors[:price].join(', ') %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2 d-flex">
+                    <%= submit_tag 'Update Stock', class: 'btn btn-primary py-2 mr-2' %>
+                    <%= link_to 'Cancel', '/admin/inventories', class: 'btn btn-secondary' %>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <% end %>
+</div>

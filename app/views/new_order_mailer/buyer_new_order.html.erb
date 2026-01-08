@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+    .container { background: #ffffff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+    .header { font-size: 22px; color: #333; text-align: center; font-weight: bold; }
+    .details { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+    .button { display: inline-block; padding: 10px 15px; background: #630CDB; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="header">Order Confirmed! Thank You for Your Purchase</p>
+
+    <p>Great news! Your order has been successfully placed. Here are the details:</p>
+
+    <div class="details">
+      <% @order_items.each do |order_item| %>
+        <p>🛍 <strong>Product:</strong> <%= "#{order_item.product.name} #{order_item.product.variant}" %></p>
+        <p>📦 <strong>Quantity:</strong> <%= order_item.quantity %></p>
+      <% end %>
+      <p>📦 <strong>Quantity:</strong> <%= @quantity %></p>
+      <p>⏳ <strong>Order Time:</strong> <%= @time %></p>
+    </div>
+
+    <p>We’re processing your order and will update you once it ships. You can track your order at any time.</p>
+
+    <p style="text-align: center;">
+      <a href="<%= @url %>" class="button" style="color: #fff">📦 Track Your Order</a>
+    </p>
+
+    <p>Thank you for shopping with us!</p>
+  </div>
+</body>
+</html>

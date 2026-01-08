@@ -1,0 +1,41 @@
+<h3 class="text-center mt-4 mb-4">Bulk Upload Inventory</h3>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">Upload a CSV file to add inventory records. The CSV should have the following columns:</p>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item"><strong>seller_email</strong> - Email address of the seller (case-insensitive)</li>
+                        <li class="list-group-item"><strong>product_name</strong> - Name of the product (case-insensitive)</li>
+                        <li class="list-group-item"><strong>sku</strong> - Sku of the product (case-insensitive)</li>
+                        <li class="list-group-item"><strong>stock_quantity</strong> - Quantity available</li>
+                        <li class="list-group-item"><strong>price</strong> - Price in dollars</li>
+                    </ul>
+                    <p class="text-muted">Each row in the CSV represents an inventory item for a specific seller and product. Ensure the email and product fields match existing records in the system.</p>
+                     <div class="mb-4">
+      <div class="mb-4">
+        <a href="/sample_inventory_upload.csv" class="btn btn-secondary">Download Sample CSV</a>
+      </div>
+    </div>
+                    <%= form_with url: import_csv_admin_inventories_path, local: true, multipart: true do |f| %>
+
+                    <div class="">
+                        <div class="">
+                            <%= f.file_field :file, accept: ".csv", required: true, class: "" %>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex col-2 justify-content-end p-0">
+                            <%= f.submit "Upload CSV", class: "btn btn-primary py-2" %>
+                        </div>
+                    </div>
+
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

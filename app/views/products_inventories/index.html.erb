@@ -1,0 +1,193 @@
+ <div class="productsHeader">
+         <!--
+     <div class="d-flex w-100">
+
+         <div class="d-flex align-items-center rounded-3 bordrFilterBar">
+             <div class="filterSetBorderRight filter-radius-right  pdngFilterimg">
+                 <%= image_tag('filter.svg', alt: 'Search') %>
+             </div>
+
+             <div class="dropdown filterSetBorderRight setHeightWidth">
+                 <button class="btn d-flex align-items-center setGapDrpDown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                     <div class="filterBarTextFont" id="BrandBtn">
+                         Brand
+                     </div>
+                     <%= image_tag('ic-keyboard-arrow-down-48px.svg', alt: 'Search') %>
+
+                 </button>
+                 <ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton1" id="brandsdropdown">
+                     <li data-brand=""><a class="dropdown-item">All</a></li>
+                     <% @brands.each do |brand| %>
+                     <li data-brand="<%= brand.name %>"><a class="dropdown-item"><%= brand.name %></a></li>
+                     <% end %>
+                 </ul>
+                 </ul>
+             </div>
+
+             <div class="dropdown filterSetBorderRight setHeightWidth">
+                 <button class="btn d-flex align-items-center setGapDrpDown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                     <div class="filterBarTextFont" id="deviceBtn">
+                         Device
+                     </div>
+                     <%= image_tag('ic-keyboard-arrow-down-48px.svg', alt: 'Search') %>
+
+                 </button>
+                 <ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton1" id="deviceDropdown">
+                      <li data-device=""><a class="dropdown-item">All</a></li>
+                     <% @devices.each do |device| %>
+                     <li data-device="<%= device.name %>"><a class="dropdown-item"><%= device.name %></a></li>
+                     <% end %>
+                 </ul>
+             </div>
+
+
+             <div class="dropdown filterSetBorderRight setHeightWidthOrder cursor-pointer">
+                 <button class="btn d-flex align-items-center setGapDrpDown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                     <div class="filterBarTextFont" id="modelBtn">
+                         Models
+                     </div>
+                     <%= image_tag('ic-keyboard-arrow-down-48px.svg', alt: 'Search') %>
+                 </button>
+                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="modelDropdown">
+                     <li data-model=""><a class="dropdown-item">All</a></li>
+                     <% @models.each do |model| %>
+                     <li data-model="<%= model.name %>"><a class="dropdown-item"><%= model.name %></a></li>
+                     <% end %>
+                 </ul>
+             </div>
+             <div class="btn d-flex align-items-center setGapDrpDown  filter-radius-left setHeightWidthOrderFilter filterSetBorderRight" id="resetInventories">
+                 <%= image_tag('ic-replay-24px.svg', alt: 'Search') %>
+                 <div class="restfilterTextFont">
+                     Reset Filter
+                 </div>
+             </div>
+         </div>
+
+       
+     </div>
+         --> 
+     <div class="d-flex justify-content-between w-100 align-items-center mobile-view flex-wrap gap-2" >
+<div>
+   <%= link_to 'Go Back', request.referer || root_path, class: "btn setBtnStats p-2 px-3" %>
+
+</div>
+<div class="d-flex justify-content-end gap-2 reverse ">
+         <button class="add-btn text-center">
+             <a href="https://www.acctra.me/product-inventories/new">
+                 <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                     <g id="SVGRepo_iconCarrier">
+                         <path d="M4 12H20M12 4V20" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                     </g>
+                 </svg>
+                 Add New Inventory
+             </a>
+         </button>
+
+         <button class="add-btn">
+             <a href="https://www.acctra.me/product-inventories/bulk_upload">
+                 <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                     <g id="SVGRepo_iconCarrier">
+                         <path d="M4 12H20M12 4V20" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                     </g>
+                 </svg>
+                 Bulk Upload
+             </a>
+         </button>
+
+         <div class="p-0 d-flex align-items-center">
+             <form action="https://www.acctra.me/product-inventories" accept-charset="UTF-8" method="get">
+                 <input class="ProductsSearchFlex w-100 p-2 px-3" placeholder="Search product inventory" type="text" name="search" id="search">
+
+             </form>
+         </div>
+
+           <div class="dropdown">
+             <button class="d-flex align-items-center rounded-pill dropdown-toggle border filter-btn-round p-2 px-3" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                 <%= image_tag('filter.svg', alt: 'Search', class:'mx-2') %>
+                 Filter
+             </button>
+
+
+             <!-- Dropdown Menu -->
+             <div class="dropdown-menu p-3" style="width: 300px;">
+
+                 <div class="mb-3">
+                     <label class="form-label">Brands</label>
+                     <select class="form-select" id="product-brand">
+                         <option selected disabled>Select By Brands</option>
+                         <% @brands.each do |brand| %>
+                         <option value="<%= brand.name %>"><%= brand.name %></option>
+                         <% end %>
+                     </select>
+                 </div>
+
+                 <div class="mb-3">
+                     <label class="form-label">Device</label>
+                     <select class="form-select" id="product-device">
+                          <option selected disabled>Select By Device</option>
+                         <% @devices.each do |device| %>
+                         <option value="<%= device.name %>"><%= device.name %></option>
+                         <% end %>
+                     </select>
+                 </div>
+                    <div class="mb-3">
+                     <label class="form-label">Models</label>
+                     <select class="form-select" id="product-model">
+                          <option selected disabled>Select By Model</option>
+                         <% @models.each do |model| %>
+                         <option value="<%= model.name %>"><%= model.name %></option>
+                         <% end %>
+                     </select>
+                 </div>
+                 <!-- Apply Button -->
+                 <div class="d-flex align-items-center justify-content-between">
+                     <button class="btn btn-danger" id="resetInventories">Reset</button>
+                     <button class="btn btn-primary" id="apply-filter-product">Apply</button>
+                 </div>
+
+             </div>
+         </div>
+     </div>
+     </div>
+ </div>
+
+
+ <div class="shadow productTableRadius mt-2">
+     <div class="table-responsive">
+         <table class="table productTable mobile-table" id="dataTable" width="100%" cellspacing="0">
+             <thead>
+                 <tr>
+                     <th class="text-center">Rank</th>
+                     <th class="text-center">Country</th>
+                     <th class="text-center">Product Name</th>
+                     <th class="text-center">Brand</th>
+                     <th class="text-center">Device Type</th>
+                     <th class="text-center">Model</th>
+                     <th class="text-center">Sku</th>
+                     <th class="text-center">Variant</th>
+                     <th class="text-center">Stock Quantity</th>
+                     <th class="text-center">Price</th>
+                     <th class="text-center">Actions</th>
+                 </tr>
+             </thead>
+             <tbody id="inventories-list">
+                 <%= render 'inventories', inventories: @product_inventories %>
+             </tbody>
+         </table>
+     </div>
+ </div>
+ <div id="pagination">
+     <%= paginate @product_inventories %>
+ </div>
+ <script>
+     function confirmDelete(event) {
+         var confirmation = confirm("Are you sure you want to delete?");
+         if (!confirmation) {
+             event.preventDefault();
+         }
+     }
+ </script>

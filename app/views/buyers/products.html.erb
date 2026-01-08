@@ -1,0 +1,161 @@
+    <div class="landingPageContainer d-flex mt-4 align-items-start">
+        <div class="brandNameHeight d-flex flex-column">
+            <h3 class="brandNameLanding">Brand Name</h3>
+            <div class="brandNameScroll">
+                <% if @brands.present? %>
+                <% @brands.each do |brand| %>
+                <div class="brandLanding mt-2" onclick="getDevices(<%= brand.id %>, event)">
+                    <%= brand.name %>
+                </div>
+                <% end %>
+                <% else %>
+                <div class=" d-flex align-item-center justify-content-center  mt-3">
+                    No Inventory found at the moment
+                </div>
+                <% end %>
+
+            </div>
+        </div>
+        <div class="brandNameHeight  flex-column d-none" id="device-div">
+            <h3 class="brandNameLanding">Device</h3>
+            <div class="brandNameScroll">
+
+            </div>
+        </div>
+        <div class="brandNameHeight  flex-column d-none" id="category-div">
+            <h3 class="brandNameLanding">Models</h3>
+            <div class="brandNameScroll">
+            </div>
+        </div>
+
+        <div class="brandNameHeight  flex-column d-none" id="products-div">
+            <h3 class="brandNameLanding">Product Name</h3>
+            <div class="brandNameScroll">
+            </div>
+        </div>
+    </div>
+
+    <div class="shadow mb-4 productTableRadius mt-5 d-none" id="products-table">
+        <div class="table-responsive" style="height: 45vh;">
+            <table class="table productTable mobile-table " id="dataTable" width="100%" cellspacing="0" >
+                <thead>
+                    <tr>
+                        <th class="text-center">Country</th>
+                        <th class="text-center">Product Name</th>
+                        <th class="text-center">Sku</th>
+                        <th class="text-center" >Variant</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center" >Stock Available</th>
+                        <th class="text-center">Model Number</th>
+                        <th class="text-center">Quantity</th>
+                        <th></th>
+
+
+                    </tr>
+                </thead>
+                <tbody id="products-table-body" >
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal show fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content borderNone">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Bid</h4>
+
+                </div>
+                <div class="modal-body">
+
+                    <form id="popupForm">
+                        <input type="hidden" id="passId">
+                        <div class="text-start">
+                            <input type="hidden" id="inventoryId" name="inventory_id">
+                            <input type="hidden" name="buyer_id" value="<%= current_user.id %>">
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label class='text-start text-black m-0'>Proudct Name</label>
+                                    <input type="text" id="product-name" class="input-border mt-2 w-100 disable-cursor" disabled>
+                                </div>
+                                <div class="col-6">
+                                    <label class='text-start text-black m-0'>Sku</label>
+                                    <input type="text" id="product-sku" class="input-border mt-2 w-100 disable-cursor" disabled>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+
+                                <div class="col-6">
+
+                                    <label class='text-start text-black m-0'>Variant</label>
+                                    <input type="text" id="product-variant" class="input-border mt-2 w-100 disable-cursor" disabled>
+                                </div>
+                                <div class="col-6">
+                                    <label class='text-start text-black m-0'>Price</label>
+                                    <input type="text" id="price" class="input-border mt-2 w-100 disable-cursor" disabled>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+
+                                <div class="col-6">
+                                    <label class='text-start text-black m-0'>Stock Available</label>
+                                    <input type="text" id="stock-available" class="input-border mt-2 w-100 disable-cursor" disabled>
+                                </div>
+                                <div class="col-6">
+
+                                    <label class='text-start text-black m-0'>Model Number</label>
+                                    <input type="text" id="model-number" class="input-border mt-2 w-100 disable-cursor" disabled>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12">
+                                    <label class='text-start text-black m-0'>Select Forwarder</label>
+
+                                    <select id="forwarder" name="forwarder" class="form-select w-100 mt-2" required>
+                                        <option value="" disabled selected>Select a forwarder</option>
+                                        <% @forwarders.each do |forwarder| %>
+                                            <option value="<%= forwarder.name %>"><%= forwarder.name %></option>
+                                        <% end %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+
+                                    <label class='text-start text-black m-0'>Quantity</label>
+                                    <input type="number" class="input-border mt-2 w-100" name="quantity" min="1" placeholder="Quantity" id="bid-quantity" required onchange="quantityCheck($('#passId').val(), event)">
+                                </div>
+
+                                <div class="col-6">
+                                    <label class='text-start text-black m-0'>Bid Amount</label>
+
+                                    <input type="text" name="quoted_price" class="input-border mt-2 w-100" min="1" placeholder="Enter bid price" required onchange="priceCheck($('#passId').val(), event)">
+                                    <small class="text-danger bid-error-message" style="display: none;">Bid cannot exceed base price</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button class="setBtnStats mt-2 btn w-100" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addToCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="text-center text-success">
+                        Product Added To Cart!
+                        <%= image_tag('checkmark-circle-2 1.svg', alt: 'Search') %>
+
+                    </h5>
+                </div>
+
+            </div>
+        </div>
+    </div>

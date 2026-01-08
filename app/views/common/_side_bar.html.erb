@@ -1,0 +1,137 @@
+<ul class="navbar-nav bg-white sidebar accordion" id="accordionSidebar">
+    <div class="d-flex align-items-center justify-content-end">
+        <button id="sidebarToggleTop" class="btn btn-link d-b-sm rounded-circle mr-3">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+    <div class="mx-3 logo">
+        <% if current_user&.profile_image.attached? %>
+        <%= image_tag(current_user.profile_image, alt: 'user', class: "logo-img") %>
+        <%else %>
+        <a class="nav-link salesText text-center" href="/users/<%= current_user.id%>/edit">
+
+            <%= image_tag('default_user_image.svg', class:"logo-img", alt: 'Search') %>
+        </a>
+        <% end %>
+
+
+    </div>
+    <li class="nav-item active">
+        <% if current_user.is_seller %>
+        <a class="nav-link text-center text-black  <%=   request.path == '/dashboard'? 'dashboardActive' : 'sidebarFonts' %>" href="/">
+            <%   if request.path == '/dashboard' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>Dashboard</span>
+        </a>
+
+
+        <% product_inventories_path =  ['/product-inventories', '/product-inventories/new'].include?(request.path) || request.path =~ /^\/product-inventories\/\d+\/edit/ %>
+        <a class="nav-link text-center text-black <%=product_inventories_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/product-inventories/">
+            <% if product_inventories_path %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>Product Stock</span>
+        </a>
+
+
+        <a class="nav-link text-center text-black  <%=   request.path == '/orders-list'? 'dashboardActive' : 'sidebarFonts' %>" href="/orders-list">
+            <%   if request.path == '/orders-list' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>Orders List</span>
+        </a>
+
+        <div class="d-flex flex-column" id="bids-side-bar">
+            <span class="d-flex align-items-center justify-content-center nav-link text-center text-black bids-side position-relative">
+                Bids
+                <i class="arrow <%= ['/bids', '/all-bids'].include?(request.path) ? 'up' : 'down' %> m-0 mx-1"></i>
+             <% unless request.path == '/bids' %>
+                <span class="notification-badge" style="color:#fff !important"> <%= Bid.seller_alert_count(current_user) %></span>
+                <% end %>
+            </span>
+            <a class="nav-link text-center text-black <%= request.path == '/bids' ? ' dashboardActive' : ' sidebarFonts' %> <%=['/bids', '/all-bids'].include?(request.path) ? 'd-block' : 'd-none' %>" href="/bids">
+                <% if request.path == '/bids' %>
+                <div class="dashboardLeftBoarder"></div>
+                <% end %>
+                <span class="">My Bids</span>
+              
+            </a>
+            <a class="nav-link text-center text-black <%= request.path == '/all-bids' ? ' dashboardActive' : ' sidebarFonts' %>
+            <%=['/bids', '/all-bids'].include?(request.path) ? 'd-block' : 'd-none' %>
+            " href="/all-bids">
+                <% if request.path == '/all-bids' %>
+                <div class="dashboardLeftBoarder"></div>
+                <% end %>
+                <span>All Bids</span>
+            </a>
+        </div>
+
+
+
+        <a class="nav-link text-center text-black  <%=   request.path == '/statistics'? 'dashboardActive' : 'sidebarFonts' %> " href="/statistics">
+            <%   if request.path == '/statistics' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>Statistics</span>
+        </a>
+        <% elsif current_user.is_buyer %>
+
+        <a class="nav-link text-center text-black <%=   request.path == '/products-list'? 'dashboardActive' : 'sidebarFonts' %>" href="/products-list">
+            <%   if request.path == '/products-list' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>Products</span>
+        </a>
+        <a class="nav-link text-center text-black  <%=   request.path == '/cart'? 'dashboardActive' : 'sidebarFonts' %>" href="/cart">
+            <%   if request.path == '/cart' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <% cart_count = current_user.cart.present? ? current_user.cart.cart_items.count : 0 %>
+            <span>View Cart </span>
+            <% unless request.path == '/cart' %>
+            <p class="notification-badge" id="cart-count"><%= cart_count %></p>
+            <% end %>
+        </a>
+        <a class="nav-link text-center text-black  <%=   request.path == '/my-orders'? 'dashboardActive' : 'sidebarFonts' %>" href="/my-orders">
+            <%   if request.path == '/my-orders' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>My Orders</span>
+        </a>
+        <a class="nav-link text-center text-black  <%=   request.path == '/my-bids'? 'dashboardActive' : 'sidebarFonts' %>" href="/my-bids">
+            <%   if request.path == '/my-bids' %>
+            <div class="dashboardLeftBoarder"></div>
+            <% end%>
+            <span>My Bids</span>
+            <%  unless request.path == '/my-bids' %>
+
+            <span class="notification-badge" style="padding: 0px !important; color:#fff !important; fon"> <%= Bid.buyers_count(current_user) %></span>
+            <%end%>
+
+        </a>
+        <%end%>
+    </li>
+    <hr class="sidebar-divider">
+    <hr class="sidebar-divider mt-auto">
+    <li class="nav-item">
+        <% if current_user.is_seller %>
+
+        <a class="nav-link salesText text-center" href="/sellers-faqs">
+            <span>Faq's</span></a>
+        <% else %>
+        <a class="nav-link salesText text-center" href="/buyers-faqs">
+            <span>Faq's</span></a>
+        <%end %>
+
+    </li>
+    <li class="nav-item">
+        <a class="nav-link salesText text-center" href="/users/<%= current_user.id%>/edit">
+            <span>Settings</span></a>
+    </li>
+    <li class="nav-item">
+        <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link salesText text-center' do %>
+        <span>Logout</span>
+        <% end %>
+    </li>
+</ul>

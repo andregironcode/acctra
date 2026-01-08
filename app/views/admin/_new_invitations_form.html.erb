@@ -1,0 +1,63 @@
+<div class="container-fluid">
+    <%= form_tag(@invitation.persisted? ? "/admin/invitations/#{@invitation.id}" : '/admin/invitations', 
+               method: @invitation.persisted? ? :put : :post, 
+               class: 'formtastic', 
+               ) do %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+      <h1><%= @invitation.persisted? ? "Edit User" : "Invite New Member" %></h1>
+      <div class="d-flex align-items-center setBorderinviteMember mt-5">
+          <div class="d-flex flex-column align-items-start">
+              <div class="mb-3 inviteAsFont">
+                  Invite As
+              </div>
+              <div class="d-flex flex-row">
+                  <div class="d-flex flex-row">
+                      <%= check_box_tag 'invitation[role]', 'seller', @invitation.role == 'seller', id: 'role_seller', class: 'role-checkbox' %>
+                      <div class="ml-2 sellerInviteFont">Seller</div>
+                  </div>
+                  <div class="d-flex flex-row mx-4">
+                      <%= check_box_tag 'invitation[role]', 'buyer', @invitation.role == 'buyer', id: 'role_buyer', class: 'role-checkbox' %>
+                      <div class="ml-2 sellerInviteFont">Buyer</div>
+                  </div>
+              </div>
+              <% if @invitation.errors[:role].any? %>
+              <div class="text-danger">
+                  <%= @invitation.errors[:role].join(', ') %>
+              </div>
+              <% end %>
+          </div>
+
+          <div class="w-50">
+              <label for="exampleInputEmail1" class="form-label emailInviteFont">Email</label>
+              <div class="d-flex align-items-center">
+                  <%= email_field_tag 'invitation[email]', @invitation.email, class: 'form-control py-4 emailInputInviteFont', placeholder: "Enter email address" %>
+                  <% if @invitation.errors[:email].any? %>
+                  <div class="text-danger">
+                      <%= @invitation.errors[:email].join(', ') %>
+                  </div>
+                  <% end %>
+                  <%= submit_tag 'Invite Now', class: 'btn btn-primary ml-4 px-5 py-3 col-md-4 emailInviteBtnFont' %>
+
+              </div>
+          </div>
+        </div>
+    <% end %>
+</div>
+
+<script>
+    // JavaScript to ensure only one checkbox can be selected at a time
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.role-checkbox');
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                checkboxes.forEach(function(otherCheckbox) {
+                    if (otherCheckbox !== checkbox && otherCheckbox.checked) {
+                        otherCheckbox.checked = false; // Uncheck other checkbox
+                    }
+                });
+            });
+        });
+    });
+</script>

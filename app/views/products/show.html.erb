@@ -1,0 +1,28 @@
+   <%= link_to 'Go Back', request.referer || root_path, class: "btn setBtnStats p-2 px-3" %>
+<div class="container mt-5">
+
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+      <h1 class="h3 mb-0">Product Details</h1>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Name:</strong> <%= @product.name %></p>
+          <p><strong>Brand:</strong> <%= @product.brand.name %></p>
+          <p><strong>Device:</strong> <%= @product.device.name %></p>
+          <p><strong>Model:</strong> <%= @product.category.name %></p>
+          <p><strong>Model Number:</strong> <%= @product.model_number.present? ? @product.model_number : "N/A" %></p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>SKU:</strong> <%= @product.sku %></p>
+          <p><strong>Description:</strong> <%= @product.description.present? ? @product.description : "N/A" %></p>
+          <p><strong>Variant:</strong> <%= @product.variant %></p>
+          <p><strong>Country:</strong> 
+            <span style="height: 20px; width: 20px;   " class=" mx-1 flag flag-icon flag-icon-<%=@product.country.downcase%> "></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+   <div class="d-flex align-items-center justify-content-between">
+   <%= link_to 'Go Back', request.referer || root_path, class: "btn setBtnStats p-2 px-3" %>
+   <div class="d-flex gap-3">
+               <button class="btn btn-primary" id="consolidate-btn"> consolidate </button>
+
+     <div class="dropdown">
+        <button class="d-flex align-items-center rounded-pill dropdown-toggle border filter-btn-round p-2 px-3" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= image_tag('filter.svg', alt: 'Search', class:'mx-2') %>
+        Filter
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu p-3" style="width: 360px;">
+            <label class="form-label fw-bold">Order By</label>
+
+            <!-- Date Picker -->
+            <div class="mb-3">
+                <label class="form-label">Date</label>
+                <div class="input-group">
+                    <input type="date" class="form-control" id="orderStartDate">
+                    <span class="input-group-text">→</span>
+                    <input type="date" class="form-control" id="orderEndDate">
+                </div>
+            </div>
+
+            <!-- Model Select -->
+            <div class="mb-3">
+                <label class="form-label">Filter By</label>
+                <select class="form-select" id="order-filter-by">
+                    <option selected disabled>Select Filter By</option>
+                    <option value="">All</option>
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Order Status</label>
+                <select class="form-select" id="order-status">
+                    <option selected disabled>Select Order Status</option>
+                    <option value="">All</option>
+                    <option value="new">New</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+
+            <!-- Apply Button -->
+            <div class="d-flex align-items-center justify-content-between">
+            <button class="btn btn-danger" id="orderReset">Reset</button>
+            <button class="btn btn-primary" id="apply-filter">Apply</button>
+            </div>
+            
+        </div>
+    </div>
+
+   </div>
+   </div>
+
+   <!-- 
+    <div class="productsHeader">
+       <div class="d-flex">
+        <div class="d-flex align-items-center rounded-3 bordrFilterBar">
+            <div class="filterSetBorderRight filter-radius-right  pdngFilterimg">
+                <%= image_tag('filter.svg', alt: 'Search') %>
+            </div>
+
+            <div class="dropdown filterSetBorderRight setHeightWidth">
+                <button class="btn d-flex align-items-center setGapDrpDown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="filterBarTextFont" id="sortBtn">
+                        Filter By
+                    </div>
+                    <%= image_tag('ic-keyboard-arrow-down-48px.svg', alt: 'Search') %>
+
+                </button>
+                <ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton1" id="sortDropdown">
+                    <li data-sort=""><a class="dropdown-item">All</a></li>
+                    <li data-sort="newest"><a class="dropdown-item">Newest</a></li>
+                    <li data-sort="oldest"><a class="dropdown-item">Oldest</a></li>
+                </ul>
+            </div>
+
+            <div class="dropdown filterSetBorderRight setHeightWidth">
+                <button class="btn d-flex align-items-center setGapDrpDown" type="button"  data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="filterBarTextFont" id="dateBtn">
+                        Date
+                    </div>
+                    <%= image_tag('ic-keyboard-arrow-down-48px.svg', alt: 'Search') %>
+                </button>
+                <ul class="dropdown-menu cursor-pointer" id="dateDropdown">
+                    <li data-date-type=""><a class="dropdown-item">All</a></li>
+                    <li data-date-type="last-7-days"><a class="dropdown-item">Last 7 Days</a></li>
+                    <li data-date-type="last-15-days"><a class="dropdown-item">Last 15 Days</a></li>
+                    <li data-date-type="last-30-days"><a class="dropdown-item">Last 30 Days</a></li>
+                    <li data-date-type="custom"><a class="dropdown-item">Custom Date</a></li>
+                </ul>
+                <div id="customDateInputs" class="custom-date" style="display: none;" >
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="orderStartDate" class="form-control">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="orderEndDate" class="form-control">
+                    <button class="apply-btn" id="applyCustomDate">Apply</button>
+                    <button class="cancel-btn" id="cancelBtn">cancel</button>
+                </div>
+            </div>
+            <div class="dropdown filterSetBorderRight setHeightWidthOrder cursor-pointer">
+                <button class="btn d-flex align-items-center setGapDrpDown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="filterBarTextFont" id="orderTypeBtn">
+                        Order Status
+                    </div>
+                    <%= image_tag('ic-keyboard-arrow-down-48px.svg', alt: 'Search') %>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="orderType">
+                    <li data-order-type=""><a class="dropdown-item">All</a></li>
+                    <li data-order-type="new"><a class="dropdown-item">New</a></li>
+                    <li data-order-type="processing"><a class="dropdown-item">Processing</a></li>
+                    <li data-order-type="completed"><a class="dropdown-item">Completed</a></li>
+                </ul>
+            </div>
+            <div class="btn d-flex align-items-center setGapDrpDown  filter-radius-left setHeightWidthOrderFilter filterSetBorderRight" id="reset">
+                <%= image_tag('ic-replay-24px.svg', alt: 'Search') %>
+                <div class="restfilterTextFont">
+                    Reset Filter
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    
+        <div class="d-flex align-items-center gap-3 mobile-width-search">
+        <div class="ProductsSearchFlex">
+            <%= form_with url: "/orders-list", method: :get, id: 'search_form', remote: true, html: { class: 'ProductsSearchForm' } do |form| %>
+            <%= image_tag('search.svg', alt: 'Search', class: 'ProductsSearchIcon') %>
+            <%= form.search_field :search, class: 'ProductsSearchInput', placeholder: 'Search Buyer', id: 'search_input' %>
+            <% end %>
+        </div>
+        </div>
+        -->
+
+
+  
+    <div class="shadow mt-2 productTableRadius ">
+        <div class="table-responsive">
+            <table class="table productTable text-center mobile-table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="pl-3"></th>
+                        <th class="pl-3">ORDER NO</th>
+                        <th> TOTAL AMOUNT</th>
+                        <th>ORDER DATE</th>
+                        <th>STATUS</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersList">
+                    <%= render 'order_list', orders: @orders %>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div id="pagination">
+    <%= paginate @orders %>
+    </div>
+<script>
+  $(document).ready(function() {
+    const orderIds = <%= @orders_as_params.where(status: "created").pluck(:id).to_json.html_safe %>;
+    if (orderIds.length > 0) {
+      $.ajax({
+        url: '<%= update_status_path %>',
+        method: 'POST',
+        headers: {
+          'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+        },
+        contentType: 'application/json',
+        data: JSON.stringify({ order_ids: orderIds }),
+        success: function(data) {
+          if (data.success) {
+            console.log('Order statuses updated to processing.');
+          } else {
+            console.error('Failed to update order statuses.');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+  });
+</script>

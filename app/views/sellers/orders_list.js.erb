@@ -1,0 +1,2 @@
+$('#ordersList').html('<%= j render partial: "order_list", locals: { orders: @orders } %>');
+$('#pagination').html('<%= j paginate(@orders) %>');
