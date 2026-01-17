@@ -92,3 +92,5 @@ gem 'iso_country_codes'
 gem 'twilio-ruby'
 
 gem "aws-sdk-s3", "~> 1.182"
+gem "sendgrid-ruby"
+gem "sendgrid-actionmailer"

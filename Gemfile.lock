@@ -345,6 +345,7 @@ GEM
       railties (>= 7.0)
     rexml (3.3.9)
     ruby2_keywords (0.0.5)
+    ruby_http_client (3.6.0)
     rubyzip (2.3.2)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -361,6 +362,11 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sendgrid-actionmailer (3.2.0)
+      mail (~> 2.7)
+      sendgrid-ruby (~> 6.4)
+    sendgrid-ruby (6.7.0)
+      ruby_http_client (~> 3.4)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -436,6 +442,8 @@ DEPENDENCIES
   rails_12factor
   sassc-rails
   selenium-webdriver
+  sendgrid-actionmailer
+  sendgrid-ruby
   sprockets-rails
   stimulus-rails
   turbo-rails
