@@ -1,5 +1,2 @@
-if ENV['SENDGRID_API_KEY'].present?
-  SendGridActionMailer.configure do |config|
-    config.api_key = ENV['SENDGRID_API_KEY']
-  end
-end
+ActionMailer::Base.add_delivery_method :sendgrid, SendGridActionMailer::DeliveryMethod,
+  api_key: ENV['SENDGRID_API_KEY']
