@@ -46,6 +46,7 @@
     <%= yield %>
     <% end %>
     <%= javascript_importmap_tags %>
+    <%= javascript_include_tag 'bootstrap5_modal_shim' %>
     <%= javascript_include_tag 'product' %>
     <%= javascript_include_tag 'orders_filters' %>
     <%= javascript_include_tag 'bids' %>
