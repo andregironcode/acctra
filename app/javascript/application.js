@@ -1,10 +1,7 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 // import "@hotwired/turbo-rails"
 import "controllers"
-import * as bootstrap from "bootstrap"
-
-// Expose bootstrap globally for jQuery modal shim
-window.bootstrap = bootstrap
+// Bootstrap is loaded via CDN in application.html.erb for global availability
 
 //= require product
 //= require statistics
