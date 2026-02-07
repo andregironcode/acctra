@@ -420,16 +420,29 @@ class SellersController < ApplicationController
           begin
             product_name = "#{@bid.inventory.product.name} #{@bid.inventory.product.variant}"
             BidMailer.with(
-              email: @bid.buyer.email, 
-              product_name: product_name, 
-              quantity: @bid.quantity, 
+              email: @bid.buyer.email,
+              product_name: product_name,
+              quantity: @bid.quantity,
               amount: @bid.offer_price
             ).new_counter.deliver_now
           rescue => e
             Rails.logger.error("Failed to send bid negotiation email: #{e.message}")
-            # Continue even if email fails
           end
-          
+
+          # Send WhatsApp counter-bid notification to buyer
+          begin
+            product_name ||= "#{@bid.inventory.product.name} #{@bid.inventory.product.variant}"
+            WhatsappService.send_new_bid_notification(
+              seller: @bid.buyer,
+              product_name: product_name,
+              quantity: @bid.quantity,
+              amount: @bid.offer_price,
+              time: Time.current.strftime("%H:%M")
+            )
+          rescue => e
+            Rails.logger.error("Failed to send WhatsApp counter-bid notification to buyer #{@bid.buyer.id}: #{e.message}")
+          end
+
           render json: { message: "Bid updated successfully.", redirect_url: "/bids" }, status: :ok
         else
           render json: { error: "Failed to update bid.", redirect_url: "/bids" }, status: :unprocessable_entity

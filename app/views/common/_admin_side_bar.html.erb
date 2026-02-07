@@ -118,8 +118,18 @@
       <% end %>
       <span>Admin Users</span>
     </a>
-    
-  
+
+  <hr class="sidebar-divider">
+
+    <% whatsapp_test_path = request.path == '/admin/whatsapp_test' %>
+    <a class="nav-link text-center text-black <%= whatsapp_test_path ? 'dashboardActive' : 'sidebarFonts' %>" href="/admin/whatsapp_test">
+      <% if whatsapp_test_path %>
+        <div class="dashboardLeftBoarder"></div>
+      <% end %>
+      <span>WhatsApp Test</span>
+    </a>
+
+
   </li>
 
 
