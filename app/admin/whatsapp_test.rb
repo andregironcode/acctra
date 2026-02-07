@@ -336,65 +336,144 @@ ActiveAdmin.register_page "WhatsApp Test" do
       end
     end
 
-    # Phone number modal
+    # Phone number modal (pure CSS/HTML, no Bootstrap JS needed)
     raw(<<~HTML)
-      <div class="modal fade" id="waPhoneModal" tabindex="-1" role="dialog" aria-labelledby="waPhoneModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content" style="border-radius: 12px; border: none;">
-            <div class="modal-header" style="border-bottom: 1px solid #eee; padding: 20px 24px;">
-              <h5 class="modal-title" id="waPhoneModalLabel" style="font-weight: 600;">Enter Phone Number</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 24px;">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body" style="padding: 24px;">
-              <p class="text-muted mb-3" style="font-size: 13px;">
-                Enter the WhatsApp number to send the test message to. Use international format (e.g. +254712345678).
-              </p>
-              <div class="form-group mb-0">
-                <label for="waTestPhone" style="font-weight: 500;">Phone Number</label>
-                <input type="text" class="form-control" id="waTestPhone" placeholder="+254712345678"
-                       style="border-radius: 8px; padding: 10px 14px; font-size: 15px;">
-              </div>
-              <input type="hidden" id="waTestType" value="">
-            </div>
-            <div class="modal-footer" style="border-top: 1px solid #eee; padding: 16px 24px;">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 8px;">Cancel</button>
-              <button type="button" class="btn btn-success" id="waConfirmSend" style="border-radius: 8px;">
-                <span id="waSendText">Send Message</span>
-                <span id="waSendSpinner" style="display: none;">
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  Sending...
-                </span>
-              </button>
-            </div>
+      <style>
+        .wa-modal-overlay {
+          display: none;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.5);
+          z-index: 9999;
+          justify-content: center;
+          align-items: center;
+        }
+        .wa-modal-overlay.active {
+          display: flex;
+        }
+        .wa-modal-box {
+          background: #fff;
+          border-radius: 12px;
+          width: 420px;
+          max-width: 90vw;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+          overflow: hidden;
+        }
+        .wa-modal-header {
+          padding: 20px 24px;
+          border-bottom: 1px solid #eee;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .wa-modal-header h5 { margin: 0; font-weight: 600; font-size: 18px; }
+        .wa-modal-close {
+          background: none; border: none; font-size: 24px; cursor: pointer;
+          color: #666; line-height: 1;
+        }
+        .wa-modal-close:hover { color: #000; }
+        .wa-modal-body { padding: 24px; }
+        .wa-modal-body label { font-weight: 500; display: block; margin-bottom: 6px; }
+        .wa-modal-body input[type="text"] {
+          width: 100%; padding: 10px 14px; font-size: 15px;
+          border: 1px solid #ced4da; border-radius: 8px; box-sizing: border-box;
+        }
+        .wa-modal-body input[type="text"]:focus {
+          outline: none; border-color: #28a745; box-shadow: 0 0 0 2px rgba(40,167,69,0.2);
+        }
+        .wa-modal-footer {
+          padding: 16px 24px;
+          border-top: 1px solid #eee;
+          display: flex;
+          justify-content: flex-end;
+          gap: 10px;
+        }
+        .wa-modal-footer button { border-radius: 8px; padding: 8px 20px; cursor: pointer; font-size: 14px; }
+        .wa-btn-cancel { background: #6c757d; color: #fff; border: none; }
+        .wa-btn-cancel:hover { background: #5a6268; }
+        .wa-btn-send { background: #28a745; color: #fff; border: none; }
+        .wa-btn-send:hover { background: #218838; }
+        .wa-btn-send:disabled { background: #94d3a2; cursor: not-allowed; }
+        .wa-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff;
+          border-top-color: transparent; border-radius: 50%; animation: wa-spin 0.6s linear infinite; }
+        @keyframes wa-spin { to { transform: rotate(360deg); } }
+      </style>
+
+      <div class="wa-modal-overlay" id="waPhoneModal">
+        <div class="wa-modal-box">
+          <div class="wa-modal-header">
+            <h5>Enter Phone Number</h5>
+            <button type="button" class="wa-modal-close" id="waModalClose">&times;</button>
+          </div>
+          <div class="wa-modal-body">
+            <p style="color: #6c757d; font-size: 13px; margin-bottom: 16px;">
+              Enter the WhatsApp number to send the test message to. Use international format (e.g. +254712345678).
+            </p>
+            <label for="waTestPhone">Phone Number</label>
+            <input type="text" id="waTestPhone" placeholder="+254712345678">
+            <input type="hidden" id="waTestType" value="">
+          </div>
+          <div class="wa-modal-footer">
+            <button type="button" class="wa-btn-cancel" id="waModalCancel">Cancel</button>
+            <button type="button" class="wa-btn-send" id="waConfirmSend">
+              <span id="waSendText">Send Message</span>
+              <span id="waSendSpinner" style="display: none;">
+                <span class="wa-spinner"></span> Sending...
+              </span>
+            </button>
           </div>
         </div>
       </div>
 
       <script>
-        $(document).ready(function() {
-          // Open modal when test button clicked
-          $('.wa-test-btn').on('click', function() {
-            var messageType = $(this).data('type');
-            $('#waTestType').val(messageType);
-            $('#waPhoneModal').modal('show');
-            $('#waTestPhone').val('');
-            $('#waTestPhone').focus();
+        document.addEventListener('DOMContentLoaded', function() {
+          var modal = document.getElementById('waPhoneModal');
+          var phoneInput = document.getElementById('waTestPhone');
+          var typeInput = document.getElementById('waTestType');
+          var sendBtn = document.getElementById('waConfirmSend');
+          var sendText = document.getElementById('waSendText');
+          var sendSpinner = document.getElementById('waSendSpinner');
+          var resultBox = document.getElementById('wa-test-result');
+          var resultTitle = document.getElementById('wa-result-title');
+          var resultBody = document.getElementById('wa-result-body');
+
+          function openModal(messageType) {
+            typeInput.value = messageType;
+            phoneInput.value = '';
+            modal.classList.add('active');
+            setTimeout(function() { phoneInput.focus(); }, 100);
+          }
+
+          function closeModal() {
+            modal.classList.remove('active');
+          }
+
+          // Open modal on button click
+          document.querySelectorAll('.wa-test-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              openModal(this.getAttribute('data-type'));
+            });
           });
 
-          // Handle Enter key in phone input
-          $('#waTestPhone').on('keypress', function(e) {
-            if (e.which === 13) {
+          // Close modal
+          document.getElementById('waModalClose').addEventListener('click', closeModal);
+          document.getElementById('waModalCancel').addEventListener('click', closeModal);
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+          });
+
+          // Enter key submits
+          phoneInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
               e.preventDefault();
-              $('#waConfirmSend').click();
+              sendBtn.click();
             }
           });
 
           // Send test message
-          $('#waConfirmSend').on('click', function() {
-            var phone = $('#waTestPhone').val().trim();
-            var type = $('#waTestType').val();
+          sendBtn.addEventListener('click', function() {
+            var phone = phoneInput.value.trim();
+            var type = typeInput.value;
 
             if (!phone) {
               alert('Please enter a phone number');
@@ -402,56 +481,62 @@ ActiveAdmin.register_page "WhatsApp Test" do
             }
 
             // Show spinner
-            $('#waSendText').hide();
-            $('#waSendSpinner').show();
-            $('#waConfirmSend').prop('disabled', true);
+            sendText.style.display = 'none';
+            sendSpinner.style.display = 'inline';
+            sendBtn.disabled = true;
 
-            $.ajax({
-              url: '/admin/whatsapp_test/send_test',
+            var csrfToken = document.querySelector('meta[name="csrf-token"]');
+            var token = csrfToken ? csrfToken.getAttribute('content') : '';
+
+            var formData = new FormData();
+            formData.append('phone_number', phone);
+            formData.append('message_type', type);
+            formData.append('authenticity_token', token);
+
+            fetch('/admin/whatsapp_test/send_test', {
               method: 'POST',
-              data: {
-                phone_number: phone,
-                message_type: type,
-                authenticity_token: $('meta[name="csrf-token"]').attr('content')
-              },
-              success: function(response) {
-                $('#waPhoneModal').modal('hide');
-                showResult('success', response.message, JSON.stringify(response, null, 2));
-              },
-              error: function(xhr) {
-                var resp = xhr.responseJSON || { error: 'Unknown error occurred' };
-                $('#waPhoneModal').modal('hide');
-                showResult('error', 'Failed to send message', JSON.stringify(resp, null, 2));
-              },
-              complete: function() {
-                $('#waSendText').show();
-                $('#waSendSpinner').hide();
-                $('#waConfirmSend').prop('disabled', false);
+              body: formData
+            })
+            .then(function(response) {
+              return response.json().then(function(data) {
+                return { ok: response.ok, data: data };
+              });
+            })
+            .then(function(result) {
+              closeModal();
+              if (result.ok) {
+                showResult('success', result.data.message, JSON.stringify(result.data, null, 2));
+              } else {
+                showResult('error', 'Failed to send message', JSON.stringify(result.data, null, 2));
               }
+            })
+            .catch(function(err) {
+              closeModal();
+              showResult('error', 'Network error', err.message);
+            })
+            .finally(function() {
+              sendText.style.display = 'inline';
+              sendSpinner.style.display = 'none';
+              sendBtn.disabled = false;
             });
           });
 
           function showResult(type, title, body) {
-            var $result = $('#wa-test-result');
-            var $title = $('#wa-result-title');
-            var $body = $('#wa-result-body');
-
-            $title.text(title);
-            $body.text(body);
+            resultTitle.textContent = title;
+            resultBody.textContent = body;
 
             if (type === 'success') {
-              $title.css('color', '#28a745');
-              $result.css('border-left', '4px solid #28a745');
+              resultTitle.style.color = '#28a745';
+              resultBox.style.borderLeft = '4px solid #28a745';
             } else {
-              $title.css('color', '#dc3545');
-              $result.css('border-left', '4px solid #dc3545');
+              resultTitle.style.color = '#dc3545';
+              resultBox.style.borderLeft = '4px solid #dc3545';
             }
 
-            $result.slideDown(300);
+            resultBox.style.display = 'block';
 
-            // Auto-hide after 15 seconds
             setTimeout(function() {
-              $result.slideUp(300);
+              resultBox.style.display = 'none';
             }, 15000);
           }
         });
